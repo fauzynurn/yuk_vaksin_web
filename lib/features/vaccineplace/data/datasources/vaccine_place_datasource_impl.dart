@@ -9,7 +9,7 @@ import 'package:yuk_vaksin_web/features/vaccineplace/data/models/vaccine_place.d
 import '../../../../core/error.dart';
 import '../../../../core/key.dart';
 
-const googleBaseUrl = 'https://maps.googleapis.com/maps/api/';
+const googleBaseUrl = 'https://maps.googleapis.com/maps/api/js';
 
 class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
   final Dio dio;

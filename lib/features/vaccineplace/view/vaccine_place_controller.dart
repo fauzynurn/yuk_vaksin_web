@@ -5,10 +5,16 @@ import '../../../utils/date_util.dart';
 import '../data/models/vaccine_place.dart';
 
 class VaccinePlaceController extends GetxController {
+  static int pageSize = 10;
+
   final _vaccinePlaceList = DataWrapper<List<VaccinePlace>>.init().obs;
 
   DataWrapper<List<VaccinePlace>> get vaccinePlaceList =>
       _vaccinePlaceList.value;
+
+  final currentPage = 0.obs;
+
+  final isLastPageReached = false.obs;
 
   final VaccinePlaceDataSource _vaccinePlaceDataSource;
 
@@ -30,12 +36,30 @@ class VaccinePlaceController extends GetxController {
     }
   }
 
+  void onTapPreviousPage() {
+    currentPage.value = currentPage.value - 1;
+  }
+
+  void onTapNextPage() {
+    currentPage.value = currentPage.value + 1;
+  }
+
+  void onReceiveAddVaccinePlace() {
+    fetchVaccinePlaceList();
+  }
+
   void fetchVaccinePlaceList() {
     _vaccinePlaceList.value = DataWrapper.loading();
     _vaccinePlaceDataSource
-        .getVaccinePlaceList(currentStartDate.value.toYearMonthDayFormat,
-            currentEndDate.value.toYearMonthDayFormat)
-        .then((value) => _vaccinePlaceList.value = DataWrapper.success(value),
+        .getVaccinePlaceList(
+            currentStartDate.value.toYearMonthDayFormat,
+            currentEndDate.value.toYearMonthDayFormat,
+            currentPage.value * pageSize,
+            pageSize)
+        .then((value) {
+      isLastPageReached.value = value.length < pageSize;
+      _vaccinePlaceList.value = DataWrapper.success(value);
+    },
             onError: (error) =>
                 _vaccinePlaceList.value = DataWrapper.error(error.toString()));
   }
@@ -44,7 +68,7 @@ class VaccinePlaceController extends GetxController {
   void onReady() {
     super.onReady();
 
-    everAll([currentStartDate, currentEndDate], (_) {
+    everAll([currentStartDate, currentEndDate, currentPage], (_) {
       fetchVaccinePlaceList();
     });
     fetchVaccinePlaceList();

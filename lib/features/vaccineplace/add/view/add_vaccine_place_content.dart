@@ -145,14 +145,105 @@ class AddVaccinePlaceContent extends GetView<AddVaccinePlaceController> {
         ),
         Flexible(
             flex: 1,
-            child: VerticalTitleValue(
-              title: 'Lokasi dalam map',
-              value: SizedBox(
-                  width: 450, height: 230, child: Obx(() => googleMap())),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                VerticalTitleValue(
+                  title: 'Lokasi dalam map',
+                  value: SizedBox(
+                      width: 450, height: 230, child: Obx(() => googleMap())),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Expanded(
+                  child: Obx(() => VerticalTitleValue(
+                      title: 'Upload foto tempat vaksin',
+                      value: controller.pickedImage.value == null
+                          ? MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: controller.onTapUploadPhoto,
+                                child: Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: grey),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 32),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.image,
+                                            color: grey,
+                                            size: 32,
+                                          ),
+                                          const SizedBox(
+                                            height: 18,
+                                          ),
+                                          Text(
+                                            'Klik untuk upload foto',
+                                            style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                                color: grey),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ))
+                          : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                pickedImage(),
+                              ],
+                            ))),
+                )
+              ],
             ))
       ],
     );
   }
+
+  Widget pickedImage() => Stack(
+        clipBehavior: Clip.none,
+        fit: StackFit.passthrough,
+        children: [
+          Image.network(
+            controller.pickedImage.value!,
+            width: 180,
+            fit: BoxFit.fill,
+          ),
+          Positioned(
+            right: -10,
+            top: -10,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: controller.onTapClosePhoto,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                      color: blackGrey, shape: BoxShape.circle),
+                  child: const Icon(
+                    Icons.close,
+                    color: grey,
+                    size: 12,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      );
 
   Widget googleMap() {
     switch (controller.coordinate.value.status) {

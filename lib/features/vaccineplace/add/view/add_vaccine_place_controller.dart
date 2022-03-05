@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:yuk_vaksin_web/core/data_wrapper.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/lat_long.dart';
@@ -23,6 +24,12 @@ class AddVaccinePlaceController extends GetxController {
 
   final coordinate = DataWrapper<LatLong>.init().obs;
 
+  final pickedImage = Rx<String?>(null);
+
+  final _picker = ImagePicker();
+
+  var pickedImageUrl = '';
+
   String get latitudeLongitude =>
       '${coordinate.value.data!.latitude}, ${coordinate.value.data!.longitude}';
 
@@ -43,6 +50,36 @@ class AddVaccinePlaceController extends GetxController {
       return 'Lokasi tidak boleh kosong';
     }
     return null;
+  }
+
+  void onTapUploadPhoto() async {
+    var image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      var imageUrl = await _vaccinePlaceDataSource.uploadPhoto(image);
+      pickedImageUrl = imageUrl;
+      pickedImage.value = image.path;
+    }
+  }
+
+  void onTapClosePhoto() {
+    pickedImage.value = null;
+  }
+
+  void onTapSubmitButton() async {
+    try {
+      await _vaccinePlaceDataSource.addVaccinePlace(
+          placeTextEditingController.text,
+          address.value.data!,
+          coordinate.value.data!.latitude,
+          coordinate.value.data!.longitude,
+          currentStartDate.value.toYearMonthDayFormat,
+          currentEndDate.value.toYearMonthDayFormat,
+          pickedImageUrl);
+    } catch (error) {
+      Get.rawSnackbar(
+          title: 'Terdapat masalah dalam memproses data',
+          message: 'Silakan coba lagi');
+    }
   }
 
   void onSelectLocation(Location value) {

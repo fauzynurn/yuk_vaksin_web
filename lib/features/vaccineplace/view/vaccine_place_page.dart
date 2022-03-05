@@ -1,7 +1,11 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/add/view/add_vaccine_place_content.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/data/models/vaccine_place.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_content.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/view/vaccine_place_controller.dart';
 import 'package:yuk_vaksin_web/utils/date_util.dart';
 import 'package:yuk_vaksin_web/widgets/loading_indicator.dart';
@@ -9,6 +13,7 @@ import 'package:yuk_vaksin_web/widgets/primary_button.dart';
 
 import '../../../core/base_color.dart';
 import '../../../core/data_wrapper.dart';
+import '../add/view/add_vaccine_place_controller.dart';
 
 class VaccinePlacePage extends GetView<VaccinePlaceController> {
   static const routeName = '/vaccine-place';
@@ -27,43 +32,127 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
                   width: 28,
                 ),
                 dateFilter(context),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Obx(
+                        () => IconButton(
+                            onPressed: controller.currentPage.value != 0
+                                ? controller.onTapPreviousPage
+                                : null,
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              size: 16,
+                              color: controller.currentPage.value != 0
+                                  ? Colors.black
+                                  : grey,
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Obx(() => Text(
+                              'Page ${controller.currentPage.value + 1}',
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.normal, fontSize: 12),
+                            )),
+                      ),
+                      Obx(
+                        () => IconButton(
+                            onPressed: controller.isLastPageReached.value
+                                ? null
+                                : controller.onTapNextPage,
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: controller.isLastPageReached.value
+                                  ? grey
+                                  : Colors.black,
+                            )),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
             const SizedBox(
               height: 32,
             ),
-            Obx(() => vaccinePlaceTable()),
+            Obx(() => vaccinePlaceTable(context)),
           ],
         ),
       );
 
-  void showAddVaccinePlaceButton(BuildContext context) => showDialog<String>(
+  void showVaccinePlaceDetailDialog(
+      BuildContext context, VaccinePlace vaccinePlace) {
+    showDialog(
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Detail tempat vaksin',
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black),
+        ),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: 1000,
+            minHeight: 200,
+          ),
+          child: VaccinePlaceDetailContent(
+            vaccinePlace: vaccinePlace,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, 'OK');
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-            title: Text(
-              'Tambah tempat vaksin',
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: Colors.black),
-            ),
-            content: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 1000,
-                  minHeight: 200,
+    );
+  }
+
+  void showAddVaccinePlaceDialog(BuildContext context) async {
+    var result = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Tambah tempat vaksin',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 1000,
+                    minHeight: 200,
+                  ),
+                  child: const AddVaccinePlaceContent()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Cancel'),
                 ),
-                child: const AddVaccinePlaceContent()),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'Cancel'),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ));
+                TextButton(
+                  onPressed: () {
+                    Get.find<AddVaccinePlaceController>().onTapSubmitButton();
+                    Navigator.pop(context, 'OK');
+                    Get.rawSnackbar(
+                        title: 'Success',
+                        message: 'Tempat vaksin berhasil ditambahkan');
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    Get.delete<AddVaccinePlaceController>();
+    if (result != null) {
+      controller.onReceiveAddVaccinePlace();
+    }
+  }
 
   Widget addVaccinePlaceButton(BuildContext context) => PrimaryButton(
       icon: const Icon(
@@ -71,7 +160,7 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
         size: 16,
         color: Colors.white,
       ),
-      onTap: () => showAddVaccinePlaceButton(context),
+      onTap: () => showAddVaccinePlaceDialog(context),
       label: 'Tambah');
 
   Widget dateFilter(BuildContext context) => MouseRegion(
@@ -169,7 +258,7 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
   //       ),),
   //     );
 
-  Widget vaccinePlaceTable() {
+  Widget vaccinePlaceTable(BuildContext context) {
     switch (controller.vaccinePlaceList.status) {
       case Status.loading:
         return const Center(
@@ -179,105 +268,107 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: SingleChildScrollView(
-              child: DataTable(
-                  headingRowColor:
-                      MaterialStateColor.resolveWith((states) => fadeGrey),
-                  dataRowColor:
-                      MaterialStateColor.resolveWith((states) => Colors.white),
-                  columns: [
-                    DataColumn(
-                        label: Text(
-                      'Aksi',
-                      style: GoogleFonts.poppins(
-                          color: blackGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Nama Lokasi',
-                      style: GoogleFonts.poppins(
-                          color: blackGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Alamat Lengkap',
-                      style: GoogleFonts.poppins(
-                          color: blackGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Tanggal Mulai',
-                      style: GoogleFonts.poppins(
-                          color: blackGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Tanggal Selesai',
-                      style: GoogleFonts.poppins(
-                          color: blackGrey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    )),
-                  ],
-                  rows: controller.vaccinePlaceList.data!
-                      .map((item) => DataRow(cells: [
-                            DataCell(Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
+            child: DataTable(
+                headingRowColor:
+                    MaterialStateColor.resolveWith((states) => fadeGrey),
+                dataRowColor:
+                    MaterialStateColor.resolveWith((states) => Colors.white),
+                columns: [
+                  DataColumn(
+                      label: Text(
+                    'Aksi',
+                    style: GoogleFonts.poppins(
+                        color: blackGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Nama Lokasi',
+                    style: GoogleFonts.poppins(
+                        color: blackGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Alamat Lengkap',
+                    style: GoogleFonts.poppins(
+                        color: blackGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Tanggal Mulai',
+                    style: GoogleFonts.poppins(
+                        color: blackGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Tanggal Selesai',
+                    style: GoogleFonts.poppins(
+                        color: blackGrey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  )),
+                ],
+                rows: controller.vaccinePlaceList.data!
+                    .map((item) => DataRow(cells: [
+                          DataCell(Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: () async =>
+                                    showVaccinePlaceDetailDialog(context, item),
+                                icon: const Icon(
                                   Icons.remove_red_eye,
                                   size: 24,
                                   color: blue,
                                 ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                Icon(
-                                  Icons.delete,
-                                  size: 24,
-                                  color: Colors.red,
-                                )
-                              ],
-                            )),
-                            DataCell(Text(
-                              item.locationName,
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )),
-                            DataCell(Text(
-                              item.address,
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )),
-                            DataCell(Text(
-                              item.startDate.toDayMonthYearFormat,
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )),
-                            DataCell(Text(
-                              item.endDate.toDayMonthYearFormat,
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontSize: 14),
-                            )),
-                          ]))
-                      .toList()),
-            ),
+                              ),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              const Icon(
+                                Icons.delete,
+                                size: 24,
+                                color: Colors.red,
+                              )
+                            ],
+                          )),
+                          DataCell(Text(
+                            item.locationName,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14),
+                          )),
+                          DataCell(Text(
+                            item.address,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14),
+                          )),
+                          DataCell(Text(
+                            item.startDate.toDayMonthYearFormat,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14),
+                          )),
+                          DataCell(Text(
+                            item.endDate.toDayMonthYearFormat,
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14),
+                          )),
+                        ]))
+                    .toList()),
           ),
           Obx(() => controller.vaccinePlaceList.data != null &&
                   controller.vaccinePlaceList.data!.isEmpty
@@ -293,7 +384,7 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
                             fontSize: 14)),
                   ),
                 )
-              : const SizedBox())
+              : const SizedBox()),
         ]);
       case Status.error:
         return const SizedBox();
@@ -306,6 +397,6 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: body(context));
+    return Scaffold(body: SingleChildScrollView(child: body(context)));
   }
 }

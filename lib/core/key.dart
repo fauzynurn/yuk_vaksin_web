@@ -1,1 +1,1 @@
-const placesApiKey = 'AIzaSyCvDjDzq302xyCRWAa-Y9z8Bs_yamM1Ex8';
+const placesApiKey = String.fromEnvironment('GOOGLE_API_KEY');

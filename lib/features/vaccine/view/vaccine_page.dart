@@ -1,35 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:yuk_vaksin_web/features/article/view/article_controller.dart';
-import 'package:yuk_vaksin_web/utils/date_util.dart';
 
 import '../../../core/base_color.dart';
 import '../../../core/data_wrapper.dart';
 import '../../../widgets/loading_indicator.dart';
 import '../../../widgets/primary_button.dart';
-import '../add/view/add_article_content.dart';
-import '../add/view/add_article_controller.dart';
-import '../data/models/vaccine_news.dart';
+import '../add/view/add_vaccine_content.dart';
+import '../add/view/add_vaccine_controller.dart';
+import '../data/models/vaccine.dart';
+import 'vaccine_controller.dart';
 
-class ArticlePage extends GetView<ArticleController> {
-  static const routeName = '/article';
+class VaccinePage extends GetView<VaccineController> {
+  static const routeName = '/vaccine';
 
-  const ArticlePage({Key? key}) : super(key: key);
+  const VaccinePage({Key? key}) : super(key: key);
 
-  void showDeleteDialog(VaccineNews vaccineNews, BuildContext context) async {
+  void showDeleteDialog(Vaccine vaccine, BuildContext context) async {
     var result = await showDialog<bool>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
               title: Text(
-                'Apakah anda yakin akan menghapus artikel ini?',
+                'Apakah anda yakin akan menghapus jenis vaksin ini?',
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                     color: Colors.black),
               ),
               content: Text(
-                'Artikel yang dihapus tidak dapat dikembalikan lagi',
+                'Data vaksin yang dihapus tidak dapat dikembalikan lagi',
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.normal,
                     fontSize: 12,
@@ -49,23 +48,23 @@ class ArticlePage extends GetView<ArticleController> {
               ],
             ));
     if (result != null && result) {
-      controller.onTapDeleteArticleItem(vaccineNews);
+      controller.onTapDeleteVaccineItem(vaccine);
     }
   }
 
-  void showAddArticleDialog(BuildContext context) async {
+  void showAddVaccineDialog(BuildContext context) async {
     var result = await showDialog<bool>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
               title: Text(
-                'Tambah artikel',
+                'Tambah jenis vaksin',
                 style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
                     color: Colors.black),
               ),
               content: const SizedBox(
-                  width: 700, height: 600, child: AddArticleContent()),
+                  width: 700, height: 200, child: AddVaccineContent()),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
@@ -73,19 +72,58 @@ class ArticlePage extends GetView<ArticleController> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Get.find<AddArticleController>().onTapSubmitButton();
+                    Get.find<AddVaccineController>().onTapSubmitButton();
                     Navigator.pop(context, true);
                     Get.rawSnackbar(
                         title: 'Success',
-                        message: 'Artikel berhasil ditambahkan');
+                        message: 'Jenis vaksin berhasil ditambahkan');
                   },
                   child: const Text('OK'),
                 ),
               ],
             ));
-    Get.delete<AddArticleController>();
+    Get.delete<AddVaccineController>();
     if (result!) {
-      controller.fetchArticleList();
+      await Future.delayed(const Duration(seconds: 1));
+      controller.fetchVaccineList();
+    }
+  }
+
+  void showEditVaccineDialog(Vaccine vaccine, BuildContext context) async {
+    Get.find<AddVaccineController>().param = vaccine;
+    var result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Ubah jenis vaksin',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: const SizedBox(
+                  width: 700, height: 600, child: AddVaccineContent()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.find<AddVaccineController>().onTapSubmitButton();
+                    Navigator.pop(context, true);
+                    Get.rawSnackbar(
+                        title: 'Success',
+                        message: 'Jenis vaksin berhasil diubah');
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    Get.delete<AddVaccineController>();
+    if (result!) {
+      await Future.delayed(const Duration(seconds: 1));
+      Get.find<VaccineController>().fetchVaccineList();
     }
   }
 
@@ -102,62 +140,62 @@ class ArticlePage extends GetView<ArticleController> {
                       size: 16,
                       color: Colors.white,
                     ),
-                    onTap: () => showAddArticleDialog(context),
-                    // () => showAddArticleDialog(context),
+                    onTap: () => showAddVaccineDialog(context),
+                    // () => showAddVaccineDialog(context),
                     label: 'Tambah'),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Obx(
-                        () => IconButton(
-                            onPressed: controller.currentPage.value != 0
-                                ? controller.onTapPreviousPage
-                                : null,
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              size: 16,
-                              color: controller.currentPage.value != 0
-                                  ? Colors.black
-                                  : grey,
-                            )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Obx(() => Text(
-                              'Page ${controller.currentPage.value + 1}',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.normal, fontSize: 12),
-                            )),
-                      ),
-                      Obx(
-                        () => IconButton(
-                            onPressed: controller.isLastPageReached.value
-                                ? null
-                                : controller.onTapNextPage,
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                              color: controller.isLastPageReached.value
-                                  ? grey
-                                  : Colors.black,
-                            )),
-                      ),
-                    ],
-                  ),
-                )
+                // Expanded(
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Obx(
+                //         () => IconButton(
+                //             onPressed: controller.currentPage.value != 0
+                //                 ? controller.onTapPreviousPage
+                //                 : null,
+                //             icon: Icon(
+                //               Icons.arrow_back_ios,
+                //               size: 16,
+                //               color: controller.currentPage.value != 0
+                //                   ? Colors.black
+                //                   : grey,
+                //             )),
+                //       ),
+                //       Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 16),
+                //         child: Obx(() => Text(
+                //               'Page ${controller.currentPage.value + 1}',
+                //               style: GoogleFonts.poppins(
+                //                   fontWeight: FontWeight.normal, fontSize: 12),
+                //             )),
+                //       ),
+                //       Obx(
+                //         () => IconButton(
+                //             onPressed: controller.isLastPageReached.value
+                //                 ? null
+                //                 : controller.onTapNextPage,
+                //             icon: Icon(
+                //               Icons.arrow_forward_ios,
+                //               size: 16,
+                //               color: controller.isLastPageReached.value
+                //                   ? grey
+                //                   : Colors.black,
+                //             )),
+                //       ),
+                //     ],
+                //   ),
+                // )
               ],
             ),
             const SizedBox(
               height: 32,
             ),
-            Obx(() => articleTable(context)),
+            Obx(() => vaccineTable(context)),
           ],
         ),
       );
 
-  Widget articleTable(BuildContext context) {
-    switch (controller.articleList.value.status) {
+  Widget vaccineTable(BuildContext context) {
+    switch (controller.vaccineList.value.status) {
       case Status.loading:
         return const Center(
           child: LoadingIndicator(),
@@ -182,7 +220,7 @@ class ArticlePage extends GetView<ArticleController> {
                   )),
                   DataColumn(
                       label: Text(
-                    'Judul Artikel',
+                    'Nama Vaksin',
                     style: GoogleFonts.poppins(
                         color: blackGrey,
                         fontSize: 14,
@@ -190,39 +228,25 @@ class ArticlePage extends GetView<ArticleController> {
                   )),
                   DataColumn(
                       label: Text(
-                    'Deskripsi',
+                    'Interval',
                     style: GoogleFonts.poppins(
                         color: blackGrey,
                         fontSize: 14,
                         fontWeight: FontWeight.w600),
                   )),
-                  // DataColumn(
-                  //     label: Text(
-                  //   'Tanggal Dibuat',
-                  //   style: GoogleFonts.poppins(
-                  //       color: blackGrey,
-                  //       fontSize: 14,
-                  //       fontWeight: FontWeight.w600),
-                  // )),
-                  // DataColumn(
-                  //     label: Text(
-                  //   'Tanggal Diubah',
-                  //   style: GoogleFonts.poppins(
-                  //       color: blackGrey,
-                  //       fontSize: 14,
-                  //       fontWeight: FontWeight.w600),
-                  // )),
                 ],
-                rows: controller.articleList.value.data!
+                rows: controller.vaccineList.value.data!
                     .map((item) => DataRow(cells: [
                           DataCell(Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
-                                onPressed: () =>
-                                    controller.onTapDetailArticleItem(item),
+                                onPressed: () => showEditVaccineDialog(
+                                  item,
+                                  context,
+                                ),
                                 icon: const Icon(
-                                  Icons.remove_red_eye,
+                                  Icons.edit,
                                   size: 24,
                                   color: blue,
                                 ),
@@ -244,41 +268,27 @@ class ArticlePage extends GetView<ArticleController> {
                             ],
                           )),
                           DataCell(Text(
-                            item.title,
+                            item.name,
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black,
                                 fontSize: 14),
                           )),
                           DataCell(Text(
-                            item.shortDescription,
+                            '${item.interval.toString()} day',
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black,
                                 fontSize: 14),
                           )),
-                          // DataCell(Text(
-                          //   item.createdDate.toDayMonthYearFormat,
-                          //   style: GoogleFonts.poppins(
-                          //       fontWeight: FontWeight.w500,
-                          //       color: Colors.black,
-                          //       fontSize: 14),
-                          // )),
-                          // DataCell(Text(
-                          //   item.updatedDate.toDayMonthYearFormat,
-                          //   style: GoogleFonts.poppins(
-                          //       fontWeight: FontWeight.w500,
-                          //       color: Colors.black,
-                          //       fontSize: 14),
-                          // )),
                         ]))
                     .toList()),
           ),
-          Obx(() => controller.articleList.value.data != null &&
-                  controller.articleList.value.data!.isEmpty
+          Obx(() => controller.vaccineList.value.data != null &&
+                  controller.vaccineList.value.data!.isEmpty
               ? Container(
                   color: Colors.white,
-                  width: 345,
+                  width: 300,
                   height: 30,
                   child: Center(
                     child: Text('No data',

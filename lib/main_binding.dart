@@ -5,13 +5,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/adapter.dart';
+import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
+import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource_impl.dart';
 
 const baseUrl = 'https://go-vaksin-be-5b54mztdkq-as.a.run.app/';
 
 class MainBinding extends Binding {
   @override
   List<Bind> dependencies() {
-    return [Bind.put<Dio>(provideDio())];
+    return [
+      Bind.put<Dio>(provideDio()),
+      Bind.put<AuthDatasource>(AuthDatasourceImpl(Get.find<Dio>()))
+    ];
   }
 
   Dio provideDio() {

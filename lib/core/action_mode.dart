@@ -1,0 +1,1 @@
+enum ActionMode { add, edit }

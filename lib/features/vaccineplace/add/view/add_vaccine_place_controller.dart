@@ -7,7 +7,12 @@ import 'package:yuk_vaksin_web/features/vaccineplace/data/models/lat_long.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/location.dart';
 import 'package:yuk_vaksin_web/utils/date_util.dart';
 
+import '../../../../core/action_mode.dart';
+import '../../data/models/vaccine_place.dart';
+
 class AddVaccinePlaceController extends GetxController {
+  late VaccinePlace? param;
+
   final VaccinePlaceDataSource _vaccinePlaceDataSource;
 
   AddVaccinePlaceController(this._vaccinePlaceDataSource);
@@ -29,6 +34,8 @@ class AddVaccinePlaceController extends GetxController {
   final _picker = ImagePicker();
 
   var pickedImageUrl = '';
+
+  ActionMode mode = ActionMode.add;
 
   String get latitudeLongitude =>
       '${coordinate.value.data!.latitude}, ${coordinate.value.data!.longitude}';
@@ -67,14 +74,26 @@ class AddVaccinePlaceController extends GetxController {
 
   void onTapSubmitButton() async {
     try {
-      await _vaccinePlaceDataSource.addVaccinePlace(
-          placeTextEditingController.text,
-          address.value.data!,
-          coordinate.value.data!.latitude,
-          coordinate.value.data!.longitude,
-          currentStartDate.value.toYearMonthDayFormat,
-          currentEndDate.value.toYearMonthDayFormat,
-          pickedImageUrl);
+      if (mode == ActionMode.add) {
+        await _vaccinePlaceDataSource.addVaccinePlace(
+            placeTextEditingController.text,
+            address.value.data!,
+            coordinate.value.data!.latitude,
+            coordinate.value.data!.longitude,
+            currentStartDate.value.toYearMonthDayFormat,
+            currentEndDate.value.toYearMonthDayFormat,
+            pickedImageUrl);
+      } else {
+        await _vaccinePlaceDataSource.updateVaccinePlace(
+            param!.id,
+            placeTextEditingController.text,
+            address.value.data!,
+            coordinate.value.data!.latitude,
+            coordinate.value.data!.longitude,
+            currentStartDate.value.toYearMonthDayFormat,
+            currentEndDate.value.toYearMonthDayFormat,
+            pickedImageUrl);
+      }
     } catch (error) {
       Get.rawSnackbar(
           title: 'Terdapat masalah dalam memproses data',
@@ -108,6 +127,7 @@ class AddVaccinePlaceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    param = Get.arguments;
     placeTextEditingController.addListener(() {
       if (placeTextEditingController.text.isEmpty) {
         address.value = DataWrapper.init();
@@ -117,5 +137,16 @@ class AddVaccinePlaceController extends GetxController {
     ever(location, (_) {
       processLocationId();
     });
+    if (param != null) {
+      placeTextEditingController.text = param!.address;
+      address.value = DataWrapper.success(param!.address);
+      coordinate.value = DataWrapper.success(
+          LatLong(latitude: param!.latitude, longitude: param!.longitude));
+      currentStartDate.value = param!.startDate.toCompleteDate;
+      currentEndDate.value = param!.endDate.toCompleteDate;
+      pickedImage.value = param!.imageUrl;
+      pickedImageUrl = param!.imageUrl;
+      mode = ActionMode.edit;
+    }
   }
 }

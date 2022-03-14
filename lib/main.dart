@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:yuk_vaksin_web/features/article/view/article_binding.dart';
 import 'package:yuk_vaksin_web/features/home/view/home_binding.dart';
-import 'package:yuk_vaksin_web/features/login/login_binding.dart';
-import 'package:yuk_vaksin_web/features/login/login_page.dart';
-import 'package:yuk_vaksin_web/features/vaccineregistration/view/vaccine_registration_page.dart';
-import 'package:yuk_vaksin_web/features/vaccineschedule/view/vaccine_schedule_page.dart';
+import 'package:yuk_vaksin_web/features/vaccine/view/vaccine_binding.dart';
+import 'package:yuk_vaksin_web/features/vaccine/view/vaccine_page.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_binding.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
 import 'package:yuk_vaksin_web/main_binding.dart';
 
 import 'core/http_overrides.dart';
+import 'features/article/detail/view/article_detail_binding.dart';
+import 'features/article/detail/view/article_detail_page.dart';
 import 'features/article/view/article_page.dart';
+import 'features/auth/auth_binding.dart';
+import 'features/auth/auth_page.dart';
 import 'features/dashboard/view/dashboard_page.dart';
 import 'features/home/view/home_page.dart';
 import 'features/vaccineplace/view/vaccine_place_binding.dart';
@@ -37,44 +42,60 @@ class YukVaksinWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        initialRoute: HomePage.routeName,
+        initialRoute:
+        // AuthPage.routeName,
+        HomePage.routeName + DashboardPage.routeName,
         defaultTransition: Transition.noTransition,
         initialBinding: MainBinding(),
         getPages: [
           GetPage(
-              name: LoginPage.routeName,
-              page: () => const LoginPage(),
-              bindings: [LoginBinding()]),
+              name: AuthPage.routeName,
+              page: () => const AuthPage(),
+              bindings: [AuthBinding()]),
           GetPage(
+            preventDuplicates: true,
             name: HomePage.routeName,
             page: () => HomePage(),
             participatesInRootNavigator: true,
             bindings: [HomeBinding()],
             children: [
               GetPage(
+                preventDuplicates: true,
                 name: DashboardPage.routeName,
                 transition: Transition.noTransition,
                 page: () => const DashboardPage(),
               ),
               GetPage(
+                  preventDuplicates: true,
+                  name: VaccinePage.routeName,
+                  page: () => const VaccinePage(),
+                  bindings: [VaccineBinding()]),
+              GetPage(
+                  preventDuplicates: true,
                   name: VaccinePlacePage.routeName,
                   transition: Transition.noTransition,
                   page: () => const VaccinePlacePage(),
-                  bindings: [VaccinePlaceBinding()]),
+                  children: [
+                    GetPage(
+                        name: VaccinePlaceDetailPage.routeName,
+                        page: () => const VaccinePlaceDetailPage(),
+                        bindings: [VaccinePlaceDetailBinding()])
+                  ],
+                  bindings: [
+                    VaccinePlaceBinding()
+                  ]),
               GetPage(
-                name: VaccineSchedulePage.routeName,
-                transition: Transition.noTransition,
-                page: () => const VaccineSchedulePage(),
-              ),
-              GetPage(
-                name: VaccineRegistrationPage.routeName,
-                transition: Transition.noTransition,
-                page: () => const VaccineRegistrationPage(),
-              ),
-              GetPage(
+                preventDuplicates: true,
                 name: ArticlePage.routeName,
                 transition: Transition.noTransition,
                 page: () => const ArticlePage(),
+                bindings: [ArticleBinding()],
+                children: [
+                  GetPage(
+                      name: ArticleDetailPage.routeName,
+                      page: () => const ArticleDetailPage(),
+                      bindings: [ArticleDetailBinding()])
+                ],
               ),
             ],
           )

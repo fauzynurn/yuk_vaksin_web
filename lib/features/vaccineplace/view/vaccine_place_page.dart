@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/add/view/add_vaccine_place_content.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/vaccine_place.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_content.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/view/vaccine_place_controller.dart';
 import 'package:yuk_vaksin_web/utils/date_util.dart';
 import 'package:yuk_vaksin_web/widgets/loading_indicator.dart';
@@ -83,36 +83,36 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
         ),
       );
 
-  void showVaccinePlaceDetailDialog(
-      BuildContext context, VaccinePlace vaccinePlace) {
-    showDialog(
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Detail tempat vaksin',
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black),
-        ),
-        content: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: 1000,
-            minHeight: 200,
-          ),
-          child: VaccinePlaceDetailContent(
-            vaccinePlace: vaccinePlace,
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, 'OK');
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-      context: context,
-    );
-  }
+  // void showVaccinePlaceDetailDialog(
+  //     BuildContext context, VaccinePlace vaccinePlace) {
+  //   showDialog(
+  //     builder: (context) => AlertDialog(
+  //       title: Text(
+  //         'Detail tempat vaksin',
+  //         style: GoogleFonts.poppins(
+  //             fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black),
+  //       ),
+  //       content: ConstrainedBox(
+  //         constraints: const BoxConstraints(
+  //           minWidth: 1000,
+  //           minHeight: 200,
+  //         ),
+  //         child: VaccinePlaceDetailContent(
+  //           vaccinePlace: vaccinePlace,
+  //         ),
+  //       ),
+  //       actions: <Widget>[
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.pop(context, 'OK');
+  //           },
+  //           child: const Text('OK'),
+  //         ),
+  //       ],
+  //     ),
+  //     context: context,
+  //   );
+  // }
 
   void showAddVaccinePlaceDialog(BuildContext context) async {
     var result = await showDialog<String>(
@@ -258,6 +258,42 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
   //       ),),
   //     );
 
+  void showDeleteDialog(VaccinePlace vaccinePlace, BuildContext context) async {
+    var result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Apakah anda yakin akan menghapus tempat vaksin ini?',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: Text(
+                'Tempat vaksin yang dihapus tidak dapat dikembalikan lagi',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                    color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    if (result != null && result) {
+      controller.onTapDeleteVaccinePlaceItem(vaccinePlace);
+    }
+  }
+
   Widget vaccinePlaceTable(BuildContext context) {
     switch (controller.vaccinePlaceList.status) {
       case Status.loading:
@@ -321,8 +357,8 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
-                                onPressed: () async =>
-                                    showVaccinePlaceDetailDialog(context, item),
+                                onPressed: () => controller
+                                    .onTapDetailVaccinePlaceItem(item),
                                 icon: const Icon(
                                   Icons.remove_red_eye,
                                   size: 24,
@@ -332,10 +368,14 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
                               const SizedBox(
                                 width: 16,
                               ),
-                              const Icon(
-                                Icons.delete,
-                                size: 24,
-                                color: Colors.red,
+                              IconButton(
+                                onPressed: () =>
+                                    showDeleteDialog(item, context),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  size: 24,
+                                  color: Colors.red,
+                                ),
                               )
                             ],
                           )),

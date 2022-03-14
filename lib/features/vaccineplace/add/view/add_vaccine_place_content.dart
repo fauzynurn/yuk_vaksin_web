@@ -10,6 +10,7 @@ import 'package:yuk_vaksin_web/widgets/vertical_title_value.dart';
 import '../../../../core/base_color.dart';
 import '../../../../core/data_wrapper.dart';
 import '../../data/models/location.dart';
+import '../../view/vaccine_place_controller.dart';
 
 class AddVaccinePlaceContent extends GetView<AddVaccinePlaceController> {
   const AddVaccinePlaceContent({Key? key}) : super(key: key);
@@ -159,7 +160,8 @@ class AddVaccinePlaceContent extends GetView<AddVaccinePlaceController> {
                 Expanded(
                   child: Obx(() => VerticalTitleValue(
                       title: 'Upload foto tempat vaksin',
-                      value: controller.pickedImage.value == null
+                      value: controller.pickedImage.value == null ||
+                              controller.pickedImageUrl.isEmpty
                           ? MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(

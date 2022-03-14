@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:yuk_vaksin_web/core/data_wrapper.dart';
+import 'package:yuk_vaksin_web/features/home/view/home_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/view/vaccine_place_page.dart';
 import '../../../utils/date_util.dart';
 import '../data/models/vaccine_place.dart';
 
@@ -36,8 +39,27 @@ class VaccinePlaceController extends GetxController {
     }
   }
 
+  void onTapDetailVaccinePlaceItem(VaccinePlace vaccinePlace) {
+    Get.toNamed(
+        HomePage.routeName +
+            VaccinePlacePage.routeName +
+            VaccinePlaceDetailPage.routeName,
+        arguments: vaccinePlace);
+  }
+
   void onTapPreviousPage() {
     currentPage.value = currentPage.value - 1;
+  }
+
+  void onTapDeleteVaccinePlaceItem(VaccinePlace vaccinePlace) async {
+    try {
+      await _vaccinePlaceDataSource.deleteVaccinePlace(vaccinePlace.id);
+      Get.rawSnackbar(
+          title: 'Success', message: 'Tempat vaksin berhasil dihapus');
+      fetchVaccinePlaceList();
+    } catch (error) {
+      Get.rawSnackbar(title: 'Fail', message: 'Tempat vaksin gagal dihapus');
+    }
   }
 
   void onTapNextPage() {

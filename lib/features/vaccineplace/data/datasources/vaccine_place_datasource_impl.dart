@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/data/models/user_vaccine_registration.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/event_session.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/lat_long.dart';
@@ -97,7 +98,7 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
       String endDate,
       String imageUrl) async {
     try {
-      var response = await dio.post('admin/create-vaccine-event',
+      await dio.post('admin/create-vaccine-event',
           options:
               Options(headers: {'token': await authDatasource.getUserToken()}),
           data: {
@@ -199,6 +200,128 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
             'startDate': startDate,
             'endDate': endDate,
             'img': imageUrl
+          });
+    } on DioError catch (error) {
+      throw GeneralException(error.toString());
+    } catch (error, stackTrace) {
+      debugPrint('${error.toString()}\n${stackTrace.toString()}');
+      throw GeneralException(stackTrace.toString());
+    }
+  }
+
+  @override
+  Future<void> createEventSession(int eventId, int vaccineId, int quota,
+      String startTime, String endTime, int session, int vaccineType) async {
+    try {
+      await dio.post('admin/create-vaccine-event-schedule',
+          options: Options(
+            headers: {'token': await authDatasource.getUserToken()},
+          ),
+          data: {
+            'eventId': eventId,
+            'vaccineId': vaccineId,
+            'quota': quota,
+            'startTime': startTime,
+            'endTime': endTime,
+            'session': session,
+            'vaccineType': vaccineType,
+          });
+    } on DioError catch (error) {
+      throw GeneralException(error.toString());
+    } catch (error, stackTrace) {
+      debugPrint('${error.toString()}\n${stackTrace.toString()}');
+      throw GeneralException(stackTrace.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteEventSession(int eventScheduleId) async {
+    try {
+      await dio.post('admin/delete-vaccine-event-schedule',
+          options: Options(
+            headers: {'token': await authDatasource.getUserToken()},
+          ),
+          data: {
+            'eventScheduleId': eventScheduleId,
+          });
+    } on DioError catch (error) {
+      throw GeneralException(error.toString());
+    } catch (error, stackTrace) {
+      debugPrint('${error.toString()}\n${stackTrace.toString()}');
+      throw GeneralException(stackTrace.toString());
+    }
+  }
+
+  @override
+  Future<void> updateEventSession(
+      int eventScheduleId,
+      int eventId,
+      int vaccineId,
+      int quota,
+      String startTime,
+      String endTime,
+      int session,
+      int vaccineType) async {
+    try {
+      await dio.post('admin/edit-vaccine-schedule-session',
+          options: Options(
+            headers: {'token': await authDatasource.getUserToken()},
+          ),
+          data: {
+            'eventScheduleId': eventScheduleId,
+            'eventId': eventId,
+            'vaccineId': vaccineId,
+            'quota': quota,
+            'startTime': startTime,
+            'endTime': endTime,
+            'session': session,
+            'vaccineType': vaccineType,
+          });
+    } on DioError catch (error) {
+      throw GeneralException(error.toString());
+    } catch (error, stackTrace) {
+      debugPrint('${error.toString()}\n${stackTrace.toString()}');
+      throw GeneralException(stackTrace.toString());
+    }
+  }
+
+  @override
+  Future<List<UserVaccineRegistration>> getUserVaccineRegistrationList(
+      int eventScheduleId, int offset, int limit, int orderNumber) async {
+    try {
+      var response = await dio.get('admin/get-all-order',
+          options: Options(
+            headers: {'token': await authDatasource.getUserToken()},
+          ),
+          queryParameters: {
+            'eventScheduleId': eventScheduleId,
+            'offset': offset,
+            'limit': limit,
+            'orderNo': ''
+          });
+      return (response.data as List)
+          .map((item) => UserVaccineRegistration.fromJson(item))
+          .toList();
+    } on DioError catch (error) {
+      throw GeneralException(error.toString());
+    } catch (error, stackTrace) {
+      debugPrint('${error.toString()}\n${stackTrace.toString()}');
+      throw GeneralException(stackTrace.toString());
+    }
+  }
+
+  @override
+  Future<void> uploadCertificate(
+      int userId, int orderId, String certificateUrl) async {
+    try {
+      await dio.post('admin/create-user-vaccine-detail',
+          options: Options(
+            headers: {'token': await authDatasource.getUserToken()},
+          ),
+          data: {
+            'userId': userId,
+            'orderId': orderId,
+            'certificateUrl': certificateUrl
           });
     } on DioError catch (error) {
       throw GeneralException(error.toString());

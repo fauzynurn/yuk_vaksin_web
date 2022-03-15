@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:yuk_vaksin_web/core/base_color.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/view/add_vaccine_event_schedule_session_content.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/view/add_vaccine_event_schedule_session_controller.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/data/models/event_session.dart';
 import 'package:yuk_vaksin_web/utils/date_util.dart';
 import 'package:yuk_vaksin_web/widgets/vertical_title_value.dart';
 
@@ -21,7 +24,126 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
   const VaccinePlaceDetailPage({Key? key}) : super(key: key);
 
   String get vaccinePlaceDateRange =>
-      '${controller.param.startDate.toDayMonthYearFormat} - ${controller.param.endDate.toDayMonthYearFormat}';
+      '${controller.param!.startDate.toDayMonthYearFormat} - ${controller.param!.endDate.toDayMonthYearFormat}';
+
+  void showDeleteEventSessionDialog(
+      EventSession vaccine, BuildContext context) async {
+    var result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Apakah anda yakin akan menghapus sesi ini?',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: Text(
+                'Data sesi yang dihapus tidak dapat dikembalikan lagi',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                    color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    if (result != null && result) {
+      controller.onTapDeleteSessionItem(vaccine);
+    }
+  }
+
+  void showAddEventScheduleSessionDialog(BuildContext context) async {
+    var result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Tambah sesi',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 700,
+                    minHeight: 200,
+                  ),
+                  child: const AddVaccineEventScheduleSessionContent()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.find<AddVaccineEventScheduleSessionController>()
+                        .onTapSubmitButton();
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    Get.delete<AddVaccineEventScheduleSessionController>();
+    if (result!) {
+      await Future.delayed(const Duration(seconds: 1));
+      controller.fetchSessionList();
+      // Get.find<VaccinePlaceController>().onReceiveAddVaccinePlace();
+    }
+  }
+
+  void showEditEventScheduleSessionDialog(
+      EventSession session, BuildContext context) async {
+    Get.find<AddVaccineEventScheduleSessionController>().param = session;
+    var result = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Edit sesi',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              content: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 700,
+                    minHeight: 200,
+                  ),
+                  child: const AddVaccineEventScheduleSessionContent()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.find<AddVaccineEventScheduleSessionController>()
+                        .onTapSubmitButton();
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+    Get.delete<AddVaccineEventScheduleSessionController>();
+    if (result!) {
+      await Future.delayed(const Duration(seconds: 1));
+      controller.fetchSessionList();
+      // Get.find<VaccinePlaceController>().onReceiveAddVaccinePlace();
+    }
+  }
 
   void showEditVaccinePlaceDialog(BuildContext context) async {
     var result = await showDialog<bool>(
@@ -129,7 +251,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.network(
-                    controller.param.imageUrl,
+                    controller.param!.imageUrl,
                     width: 180,
                     height: 180,
                     fit: BoxFit.cover,
@@ -145,7 +267,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                         VerticalTitleValue(
                           title: 'Nama Tempat',
                           value: Text(
-                            controller.param.locationName,
+                            controller.param!.locationName,
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -158,7 +280,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                         VerticalTitleValue(
                           title: 'Alamat Lengkap',
                           value: Text(
-                            controller.param.address,
+                            controller.param!.address,
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -180,7 +302,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                       child: VerticalTitleValue(
                         title: 'Tanggal Mulai',
                         value: Text(
-                          controller.param.startDate.toDayMonthYearFormat,
+                          controller.param!.startDate.toDayMonthYearFormat,
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -192,7 +314,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                       child: VerticalTitleValue(
                         title: 'Tanggal Selesai',
                         value: Text(
-                          controller.param.endDate.toDayMonthYearFormat,
+                          controller.param!.endDate.toDayMonthYearFormat,
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -245,7 +367,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 VerticalTitleValue(
                   title: 'Latitude Longitude',
                   value: Text(
-                    '${controller.param.latitude}, ${controller.param.longitude}',
+                    '${controller.param!.latitude}, ${controller.param!.longitude}',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -260,16 +382,16 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                     mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                        controller.param.latitude,
-                        controller.param.longitude,
+                        controller.param!.latitude,
+                        controller.param!.longitude,
                       ),
                       zoom: 15,
                     ),
                     markers: <Marker>{
                       Marker(
                           position: LatLng(
-                            controller.param.latitude,
-                            controller.param.longitude,
+                            controller.param!.latitude,
+                            controller.param!.longitude,
                           ),
                           markerId: const MarkerId("markerId"))
                     },
@@ -277,8 +399,8 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 )
               ])));
 
-  Widget sessionSection() => Container(
-      height: 600,
+  Widget sessionSection(BuildContext context) => Container(
+      height: 1200,
       decoration: BoxDecoration(
           border: Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
           color: Colors.white),
@@ -315,7 +437,8 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                       ),
                     ),
                     TextButton.icon(
-                        onPressed: null,
+                        onPressed: () =>
+                            showAddEventScheduleSessionDialog(context),
                         style: ButtonStyle(
                             padding: MaterialStateProperty.all(
                                 const EdgeInsets.all(12)),
@@ -337,10 +460,10 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 const SizedBox(
                   height: 18,
                 ),
-                Expanded(child: sessionTable())
+                Expanded(child: sessionTable(context))
               ])));
 
-  Widget sessionTable() {
+  Widget sessionTable(BuildContext context) {
     switch (controller.sessionList.value.status) {
       case Status.loading:
         return const Center(
@@ -375,6 +498,30 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       )),
+                      // DataColumn(
+                      //     label: Text(
+                      //   'Dosis ke-',
+                      //   style: GoogleFonts.poppins(
+                      //       color: blackGrey,
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w600),
+                      // )),
+                      DataColumn(
+                          label: Text(
+                        'Nama Vaksin',
+                        style: GoogleFonts.poppins(
+                            color: blackGrey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      )),
+                      DataColumn(
+                          label: Text(
+                        'Sisa kuota',
+                        style: GoogleFonts.poppins(
+                            color: blackGrey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      )),
                       DataColumn(
                           label: Text(
                         'Waktu Mulai',
@@ -394,13 +541,72 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                     ],
                     rows: controller.sessionList.value.data!
                         .map((item) => DataRow(cells: [
-                              DataCell(Text('Lihat Detail',
-                                  style: GoogleFonts.poppins(
+                              DataCell(Row(
+                                children: [
+                                  MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          controller.onTapSessionItem(item),
+                                      child: Text('Lihat Detail',
+                                          style: GoogleFonts.poppins(
+                                              color: blue,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14)),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () =>
+                                        showEditEventScheduleSessionDialog(
+                                      item,
+                                      context,
+                                    ),
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      size: 24,
                                       color: blue,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14))),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  IconButton(
+                                    onPressed: () =>
+                                        showDeleteEventSessionDialog(
+                                            item, context),
+                                    // () =>
+                                    // showDeleteDialog(item, context),
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      size: 24,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                ],
+                              )),
                               DataCell(Text(
                                 item.session.toString(),
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontSize: 14),
+                              )),
+                              // DataCell(Text(
+                              //   item.vaccineType.toString(),
+                              //   style: GoogleFonts.poppins(
+                              //       fontWeight: FontWeight.w500,
+                              //       color: Colors.black,
+                              //       fontSize: 14),
+                              // )),
+                              DataCell(Text(
+                                item.vaccineName,
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontSize: 14),
+                              )),
+                              DataCell(Text(
+                                item.remainingQuota.toString(),
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
@@ -451,234 +657,27 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Flexible(flex: 1, child: informationSection(context)),
-              const SizedBox(
-                width: 12,
-              ),
-              Flexible(flex: 1, child: mapSection())
-            ],
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Expanded(child: Obx(() => sessionSection()))
-        ],
+        body: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Flexible(flex: 1, child: informationSection(context)),
+                const SizedBox(
+                  width: 12,
+                ),
+                Flexible(flex: 1, child: mapSection())
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Obx(() => sessionSection(context))
+          ],
+        ),
       ),
     ));
-    // return Center(child: Text('jajajajaaj'));
-    // return Row(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     Flexible(
-    //         flex: 1,
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             VerticalTitleValue(
-    //               title: 'Nama Tempat',
-    //               value: Text(
-    //                 controller.param.locationName,
-    //                 style: GoogleFonts.poppins(
-    //                   fontSize: 14,
-    //                   fontWeight: FontWeight.w600,
-    //                 ),
-    //               ),
-    //             ),
-    //             const SizedBox(
-    //               height: 18,
-    //             ),
-    //             VerticalTitleValue(
-    //               title: 'Alamat Lengkap',
-    //               value: Text(
-    //                 controller.param.address,
-    //                 style: GoogleFonts.poppins(
-    //                   fontSize: 14,
-    //                   fontWeight: FontWeight.w600,
-    //                 ),
-    //               ),
-    //             ),
-    //             const SizedBox(
-    //               height: 18,
-    //             ),
-    //             VerticalTitleValue(
-    //               title: 'Koordinat',
-    //               value: Text(
-    //                 '-',
-    //                 style: GoogleFonts.poppins(
-    //                   fontSize: 14,
-    //                   fontWeight: FontWeight.w600,
-    //                 ),
-    //               ),
-    //             ),
-    //             const SizedBox(
-    //               height: 18,
-    //             ),
-    //             VerticalTitleValue(
-    //               title: 'Jadwal Tempat Vaksin',
-    //               value: Text(
-    //                 vaccinePlaceDateRange,
-    //                 style: GoogleFonts.poppins(
-    //                   fontSize: 14,
-    //                   fontWeight: FontWeight.w600,
-    //                 ),
-    //               ),
-    //             )
-    //           ],
-    //         )),
-    //     const SizedBox(
-    //       width: 36,
-    //     ),
-    //     Flexible(
-    //         flex: 1,
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             VerticalTitleValue(
-    //               title: 'Lokasi dalam map',
-    //               value: SizedBox(width: 450, height: 230, child: Placeholder()
-    //                   // googleMap()
-    //                   ),
-    //             ),
-    //             const SizedBox(
-    //               height: 24,
-    //             ),
-    //             Expanded(
-    //               child: VerticalTitleValue(
-    //                   title: 'Upload foto tempat vaksin',
-    //                   value: Column(
-    //                     children: [
-    //                       const SizedBox(
-    //                         height: 12,
-    //                       ),
-    //                       pickedImage(),
-    //                     ],
-    //                   )),
-    //             )
-    //           ],
-    //         ))
-    //   ],
-    // );
   }
-
-// Widget pickedImage() => SizedBox(
-//       width: 180,
-//       height: 180,
-//       child: Placeholder(),
-//     );
-
-// Stack(
-//   clipBehavior: Clip.none,
-//   fit: StackFit.passthrough,
-//   children: [
-//     Image.network(
-//       pickedImage.value!,
-//       width: 180,
-//       fit: BoxFit.fill,
-//     ),
-//     Positioned(
-//       right: -10,
-//       top: -10,
-//       child: MouseRegion(
-//         cursor: SystemMouseCursors.click,
-//         child: GestureDetector(
-//           onTap: onTapClosePhoto,
-//           child: Container(
-//             padding: const EdgeInsets.all(4),
-//             decoration: const BoxDecoration(
-//                 color: blackGrey, shape: BoxShape.circle),
-//             child: const Icon(
-//               Icons.close,
-//               color: grey,
-//               size: 12,
-//             ),
-//           ),
-//         ),
-//       ),
-//     )
-//   ],
-// );
-
-// Widget googleMap() {
-//   switch (coordinate.value.status) {
-//     case Status.loading:
-//       return const SizedBox();
-//     case Status.success:
-//       return GoogleMap(
-//         mapType: MapType.normal,
-//         initialCameraPosition: CameraPosition(
-//           target: LatLng(
-//             coordinate.value.data!.latitude,
-//             coordinate.value.data!.longitude,
-//           ),
-//           zoom: 15,
-//         ),
-//         markers: <Marker>{
-//           Marker(
-//               position: LatLng(
-//                 coordinate.value.data!.latitude,
-//                 coordinate.value.data!.longitude,
-//               ),
-//               markerId: const MarkerId("markerId"))
-//         },
-//       );
-//     case Status.error:
-//       return const SizedBox();
-//     case Status.init:
-//       return Container(
-//         decoration: const BoxDecoration(
-//             color: grey, borderRadius: BorderRadius.all(Radius.circular(12))),
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               const Icon(
-//                 Icons.location_off,
-//                 size: 32,
-//                 color: blackGrey,
-//               ),
-//               const SizedBox(
-//                 height: 8,
-//               ),
-//               Text(
-//                 'Silakan masukkan nama lokasi \nterlebih dahulu',
-//                 textAlign: TextAlign.center,
-//                 style: GoogleFonts.poppins(
-//                     fontWeight: FontWeight.w600,
-//                     color: blackGrey,
-//                     fontSize: 12),
-//               )
-//             ],
-//           ),
-//         ),
-//       );
-//     default:
-//       return const SizedBox();
-//   }
-// }
-
-// Widget twoLinesShimmer() =>
-//     Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Container(
-//           width: 100,
-//           height: 24,
-//           color: Colors.white,
-//         ),
-//         const SizedBox(
-//           height: 12,
-//         ),
-//         Container(
-//           width: 50,
-//           height: 24,
-//           color: Colors.white,
-//         ),
-//       ],
-//     );
 }

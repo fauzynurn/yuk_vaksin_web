@@ -4,19 +4,19 @@ import 'package:dio/adapter_browser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dio/adapter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
 import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource_impl.dart';
 
 const baseUrl = 'https://go-vaksin-be-5b54mztdkq-as.a.run.app/';
 
-class MainBinding extends Binding {
+class MainBinding extends Bindings {
   @override
-  List<Bind> dependencies() {
-    return [
-      Bind.put<Dio>(provideDio()),
-      Bind.put<AuthDatasource>(AuthDatasourceImpl(Get.find<Dio>()))
-    ];
+  void dependencies() async {
+    var pref = await Get.putAsync(() async => await SharedPreferences.getInstance());
+    Get.put<Dio>(provideDio());
+    Get.put<AuthDatasource>(
+        AuthDatasourceImpl(Get.find<Dio>(), pref));
   }
 
   Dio provideDio() {

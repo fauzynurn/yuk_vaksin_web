@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
+import 'package:yuk_vaksin_web/features/dashboard/view/dashboard_page.dart';
+
+import '../../core/error.dart';
+import '../home/view/home_page.dart';
 
 enum AuthMode { login, register }
 
@@ -12,6 +17,10 @@ class AuthController extends GetxController {
   bool get isPasswordHidden => _isPasswordHidden.value;
 
   bool get isLoading => _isLoading.value;
+
+  final AuthDatasource authDatasource;
+
+  AuthController(this.authDatasource);
 
   /// Login
   var loginEmailTextEditingController = TextEditingController();
@@ -100,29 +109,20 @@ class AuthController extends GetxController {
     try {
       if (loginFormGlobalKey.currentState!.validate()) {
         _isLoading.value = true;
-        await Future.delayed(Duration(seconds: 1));
+        await authDatasource.login(loginEmailTextEditingController.text,
+            loginPasswordTextEditingController.text);
         _isLoading.value = false;
         // var user = await _authDatasource.login(emailTextEditingController.text,
         //     passwordTextEditingController.text);
-        // _authDatasource.saveUserInfo(user);
-        // Get.offNamed(HomePage.routeName);
+        Get.offNamed(HomePage.routeName + DashboardPage.routeName);
       }
     } catch (error) {
       _isLoading.value = false;
-      // if (error is InvalidCredentialException) {
-      //   showMessage('Email atau password salah', 'Silakan coba lagi');
-      // } else if (error is UserNotFoundException) {
-      //   showMessage('Akun tidak ditemukan',
-      //       'Silakan lakukan registrasi terlebih dahulu');
-      // } else {
-      //   showMessage('Terdapat kesalahan pada aplikasi', 'Silakan coba lagi');
-      // }
+      if (error is GeneralException) {
+        Get.rawSnackbar(
+            title: 'Login failed',
+            message: error.message ?? 'Cannot login to the account');
+      }
     }
-  }
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
   }
 }

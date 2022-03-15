@@ -85,6 +85,7 @@ class ArticlePage extends GetView<ArticleController> {
             ));
     Get.delete<AddArticleController>();
     if (result!) {
+      await Future.delayed(const Duration(seconds: 1));
       controller.fetchArticleList();
     }
   }

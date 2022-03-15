@@ -160,7 +160,7 @@ class AddArticleContent extends GetView<AddArticleController> {
           height: 8,
         ),
         VerticalTitleValue(
-            title: 'Upload foto tempat vaksin',
+            title: 'Upload foto',
             value: Obx(
               () => controller.pickedImage.value == null ||
                       controller.pickedImageUrl.isEmpty

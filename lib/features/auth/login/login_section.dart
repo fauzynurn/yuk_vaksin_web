@@ -142,28 +142,28 @@ class LoginSection extends GetView<AuthController> {
               emailTextField(),
               const SizedBox(height: 18),
               passwordTextField(),
-              const SizedBox(
-                height: 12,
-              ),
-              Text.rich(
-                TextSpan(
-                    text: 'Belum memiliki akun? ',
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: blackGrey),
-                    children: <InlineSpan>[
-                      TextSpan(
-                        text: 'Daftar Sekarang',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = controller.onTapRegisterNowButton,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            color: blue,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ]),
-              ),
+              // const SizedBox(
+              //   height: 12,
+              // ),
+              // Text.rich(
+              //   TextSpan(
+              //       text: 'Belum memiliki akun? ',
+              //       style: GoogleFonts.poppins(
+              //           fontWeight: FontWeight.w500,
+              //           fontSize: 14,
+              //           color: blackGrey),
+              //       children: <InlineSpan>[
+              //         TextSpan(
+              //           text: 'Daftar Sekarang',
+              //           recognizer: TapGestureRecognizer()
+              //             ..onTap = controller.onTapRegisterNowButton,
+              //           style: const TextStyle(
+              //               fontSize: 14,
+              //               color: blue,
+              //               fontWeight: FontWeight.w600),
+              //         )
+              //       ]),
+              // ),
               const SizedBox(
                 height: 18,
               ),

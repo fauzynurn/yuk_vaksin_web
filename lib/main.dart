@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:yuk_vaksin_web/features/article/view/article_binding.dart';
+import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
+import 'package:yuk_vaksin_web/features/dashboard/view/dashboard_binding.dart';
 import 'package:yuk_vaksin_web/features/home/view/home_binding.dart';
 import 'package:yuk_vaksin_web/features/vaccine/view/vaccine_binding.dart';
 import 'package:yuk_vaksin_web/features/vaccine/view/vaccine_page.dart';
@@ -13,6 +15,7 @@ import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_d
 import 'package:yuk_vaksin_web/main_binding.dart';
 
 import 'core/http_overrides.dart';
+import 'ensure_auth_middleware.dart';
 import 'features/article/detail/view/article_detail_binding.dart';
 import 'features/article/detail/view/article_detail_page.dart';
 import 'features/article/view/article_page.dart';
@@ -20,6 +23,8 @@ import 'features/auth/auth_binding.dart';
 import 'features/auth/auth_page.dart';
 import 'features/dashboard/view/dashboard_page.dart';
 import 'features/home/view/home_page.dart';
+import 'features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_binding.dart';
+import 'features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import 'features/vaccineplace/view/vaccine_place_binding.dart';
 import 'features/vaccineplace/view/vaccine_place_page.dart';
 
@@ -42,9 +47,8 @@ class YukVaksinWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        initialRoute:
-        // AuthPage.routeName,
-        HomePage.routeName + DashboardPage.routeName,
+        initialRoute: AuthPage.routeName,
+        // HomePage.routeName + DashboardPage.routeName,
         defaultTransition: Transition.noTransition,
         initialBinding: MainBinding(),
         getPages: [
@@ -58,13 +62,17 @@ class YukVaksinWeb extends StatelessWidget {
             page: () => HomePage(),
             participatesInRootNavigator: true,
             bindings: [HomeBinding()],
+            // middlewares: [
+            //   //only enter this route when authed
+            //   EnsureAuthMiddleware(Get.find<AuthDatasource>()),
+            // ],
             children: [
               GetPage(
-                preventDuplicates: true,
-                name: DashboardPage.routeName,
-                transition: Transition.noTransition,
-                page: () => const DashboardPage(),
-              ),
+                  preventDuplicates: true,
+                  name: DashboardPage.routeName,
+                  transition: Transition.noTransition,
+                  page: () => const DashboardPage(),
+                  bindings: [DashboardBinding()]),
               GetPage(
                   preventDuplicates: true,
                   name: VaccinePage.routeName,
@@ -79,7 +87,14 @@ class YukVaksinWeb extends StatelessWidget {
                     GetPage(
                         name: VaccinePlaceDetailPage.routeName,
                         page: () => const VaccinePlaceDetailPage(),
-                        bindings: [VaccinePlaceDetailBinding()])
+                        bindings: [VaccinePlaceDetailBinding()]),
+                    GetPage(
+                      preventDuplicates: true,
+                      name: VaccineScheduleSessionDetailPage.routeName,
+                      transition: Transition.noTransition,
+                      page: () => const VaccineScheduleSessionDetailPage(),
+                      bindings: [VaccineScheduleSessionDetailBinding()],
+                    )
                   ],
                   bindings: [
                     VaccinePlaceBinding()

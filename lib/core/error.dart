@@ -1,7 +1,8 @@
 class GeneralException {
-  final String stackTrace;
+  final String? message;
+  final String? stackTrace;
 
-  GeneralException(this.stackTrace);
+  GeneralException(this.message, {this.stackTrace});
 }
 
 class UserNotFoundException {}

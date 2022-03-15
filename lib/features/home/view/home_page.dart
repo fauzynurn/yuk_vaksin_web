@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yuk_vaksin_web/core/base_color.dart';
 import 'package:yuk_vaksin_web/features/home/view/widgets/sidebar_item.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
 
 import '../../article/detail/view/article_detail_page.dart';
@@ -24,13 +25,15 @@ class HomePage extends GetView<HomeController> {
     routeName + VaccinePlacePage.routeName + VaccinePlaceDetailPage.routeName:
         'Detail Tempat Vaksin',
     routeName + ArticlePage.routeName + ArticleDetailPage.routeName:
-        'Detail Artikel'
+        'Detail Artikel',
+    routeName +
+        VaccinePlacePage.routeName +
+        VaccineScheduleSessionDetailPage.routeName: 'Detail sesi'
   };
 
   HomePage({Key? key}) : super(key: key);
 
   Widget sideBar(BuildContext context) {
-    debugPrint('ROUTESS: ${context.location}');
     return Container(
       decoration:
           BoxDecoration(color: Colors.white, border: Border.all(color: grey)),
@@ -120,6 +123,25 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
+  Widget logoutButton() => TextButton(
+        onPressed: controller.onTapLogoutButton,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 4),
+          child: Text(
+            'Keluar',
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+          ),
+        ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(blue),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          )),
+        ),
+      );
+
   Widget topBar(String currentRouteName) => Container(
       decoration:
           BoxDecoration(color: Colors.white, border: Border.all(color: grey)),
@@ -138,21 +160,19 @@ class HomePage extends GetView<HomeController> {
               ),
               Row(
                 children: [
-                  Text(
-                    'Admin',
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.black),
+                  Obx(
+                    () => Text(
+                      controller.username.value,
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.black),
+                    ),
                   ),
                   const SizedBox(
                     width: 16,
                   ),
-                  const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: Colors.black,
-                  )
+                  logoutButton()
                 ],
               )
             ],

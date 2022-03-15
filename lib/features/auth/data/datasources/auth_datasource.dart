@@ -3,7 +3,11 @@ abstract class AuthDatasource {
 
   Future<void> register(String name, String email, String password);
 
-  Future<String> getUserName();
+  Future<String?> getUserName();
 
-  Future<String> getUserToken();
+  Future<String?> getUserToken();
+
+  void setUserName(String value);
+
+  void setUserToken(String value);
 }

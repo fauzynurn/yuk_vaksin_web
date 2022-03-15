@@ -138,7 +138,7 @@ class AddVaccinePlaceController extends GetxController {
       processLocationId();
     });
     if (param != null) {
-      placeTextEditingController.text = param!.address;
+      placeTextEditingController.text = param!.locationName;
       address.value = DataWrapper.success(param!.address);
       coordinate.value = DataWrapper.success(
           LatLong(latitude: param!.latitude, longitude: param!.longitude));

@@ -22,7 +22,6 @@ class AddVaccineEventScheduleSessionController extends GetxController {
   final quotaTextEditingController = TextEditingController();
   final currentStartDate = Rx<DateTime>(DateTime.now());
   final currentStartTime = Rx<TimeOfDay>(TimeOfDay.now());
-  final currentEndDate = Rx<DateTime>(DateTime.now());
   final currentEndTime = Rx<TimeOfDay>(TimeOfDay.now());
   final selectedVaccine = Rx<Vaccine?>(null);
 
@@ -57,12 +56,6 @@ class AddVaccineEventScheduleSessionController extends GetxController {
     }
   }
 
-  void onChangeEndDate(DateTime? dateTime) {
-    if (dateTime != null) {
-      currentEndDate.value = dateTime;
-    }
-  }
-
   void onChangeEndTime(TimeOfDay? time) {
     if (time != null) {
       currentEndTime.value = time;
@@ -75,15 +68,13 @@ class AddVaccineEventScheduleSessionController extends GetxController {
 
   void onTapSubmitButton() async {
     try {
-      var x = Get.find<VaccinePlaceDetailController>().param!.id;
-
-    if (mode == ActionMode.add) {
+      if (mode == ActionMode.add) {
         await vaccinePlaceDatasource.createEventSession(
           Get.find<VaccinePlaceDetailController>().param!.id,
           selectedVaccine.value!.id,
           int.parse(quotaTextEditingController.text),
           '${currentStartDate.value.toYearMonthDayFormat}  ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentStartTime.value, alwaysUse24HourFormat: true)}',
-          '${currentEndDate.value.toYearMonthDayFormat} ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentEndTime.value, alwaysUse24HourFormat: true)}',
+          '${currentStartDate.value.toYearMonthDayFormat} ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentEndTime.value, alwaysUse24HourFormat: true)}',
           int.parse(sessionTextEditingController.text),
           int.parse(vaccineTypeTextEditingController.text),
         );
@@ -95,7 +86,7 @@ class AddVaccineEventScheduleSessionController extends GetxController {
           selectedVaccine.value!.id,
           int.parse(quotaTextEditingController.text),
           '${currentStartDate.value.toYearMonthDayFormat} ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentStartTime.value, alwaysUse24HourFormat: true)}',
-          '${currentEndDate.value.toYearMonthDayFormat} ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentEndTime.value, alwaysUse24HourFormat: true)}',
+          '${currentStartDate.value.toYearMonthDayFormat} ${MaterialLocalizations.of(Get.context!).formatTimeOfDay(currentEndTime.value, alwaysUse24HourFormat: true)}',
           int.parse(sessionTextEditingController.text),
           int.parse(vaccineTypeTextEditingController.text),
         );
@@ -125,26 +116,9 @@ class AddVaccineEventScheduleSessionController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-    if (param != null) {
-      sessionTextEditingController.text = param!.session.toString();
-      vaccineTypeTextEditingController.text =
-          param!.vaccineType != null ? param!.vaccineType.toString() : '';
-      quotaTextEditingController.text = param!.remainingQuota.toString();
-      currentStartDate.value = param!.startTime.toCompleteDate;
-      currentStartTime.value =
-          TimeOfDay.fromDateTime(param!.startTime.toCompleteDate);
-      currentEndDate.value = param!.endTime.toCompleteDate;
-      currentEndTime.value =
-          TimeOfDay.fromDateTime(param!.endTime.toCompleteDate);
-      mode = ActionMode.edit;
-    }
-  }
-
-  @override
   void onReady() {
     super.onReady();
+    currentStartDate.value = bottomLimitDate;
     if (param != null) {
       sessionTextEditingController.text = param!.session.toString();
       vaccineTypeTextEditingController.text =
@@ -153,7 +127,6 @@ class AddVaccineEventScheduleSessionController extends GetxController {
       currentStartDate.value = param!.startTime.toCompleteDate;
       currentStartTime.value =
           TimeOfDay.fromDateTime(param!.startTime.toCompleteDate);
-      currentEndDate.value = param!.endTime.toCompleteDate;
       currentEndTime.value =
           TimeOfDay.fromDateTime(param!.endTime.toCompleteDate);
       mode = ActionMode.edit;

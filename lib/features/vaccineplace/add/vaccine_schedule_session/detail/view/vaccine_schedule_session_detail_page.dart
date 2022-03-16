@@ -12,7 +12,7 @@ import '../../../../../../widgets/loading_indicator.dart';
 
 class VaccineScheduleSessionDetailPage
     extends GetView<VaccineScheduleSessionDetailController> {
-  static const routeName = '/event-session/detail';
+  static const routeName = '/event-session-detail';
 
   const VaccineScheduleSessionDetailPage({Key? key}) : super(key: key);
 

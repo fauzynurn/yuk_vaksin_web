@@ -124,7 +124,7 @@ class AddVaccineEventScheduleSessionContent
             children: [
               Expanded(
                 child: VerticalTitleValue(
-                    title: 'Tanggal Mulai',
+                    title: 'Tanggal Vaksin',
                     value: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
@@ -183,181 +183,117 @@ class AddVaccineEventScheduleSessionContent
                 width: 8,
               ),
               Expanded(
-                child: VerticalTitleValue(
-                    title: 'Waktu Mulai',
-                    value: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () async {
-                            var pickedTime = await showTimePicker(
-                              context: context,
-                              builder: (context, child) => Theme(
-                                  data: ThemeData.light().copyWith(
-                                      colorScheme: const ColorScheme.light(
-                                          primary: blue)),
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: 400,
-                                      height: 500,
-                                      child: child,
-                                    ),
-                                  )),
-                              initialTime: TimeOfDay.now(),
-                            );
-                            controller.onChangeStartTime(pickedTime);
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: grey),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Obx(() => Text(
-                                          controller.currentStartTime.value
-                                              .format(context),
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        )),
-                                    const SizedBox(width: 12),
-                                    const Icon(
-                                      Icons.access_time,
-                                      size: 16,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ))),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: VerticalTitleValue(
-                    title: 'Tanggal Selesai',
-                    value: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () async {
-                            var pickedDate = await showDatePicker(
-                              context: context,
-                              builder: (context, child) => Theme(
-                                  data: ThemeData.light().copyWith(
-                                      colorScheme: const ColorScheme.light(
-                                          primary: blue)),
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: 400,
-                                      height: 500,
-                                      child: child,
-                                    ),
-                                  )),
-                              initialDate: controller.bottomLimitDate,
-                              firstDate: controller.bottomLimitDate,
-                              lastDate: controller.topLimitDate,
-                            );
-                            controller.onChangeEndDate(pickedDate);
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: grey),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Obx(() => Text(
-                                          controller.currentEndDate.value
-                                              .toDayMonthYearFormat,
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        )),
-                                    const SizedBox(width: 12),
-                                    const Icon(
-                                      Icons.today,
-                                      size: 16,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ))),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Expanded(
-                child: VerticalTitleValue(
-                    title: 'Waktu Selesai',
-                    value: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () async {
-                            var pickedTime = await showTimePicker(
-                              context: context,
-                              builder: (context, child) => Theme(
-                                  data: ThemeData.light().copyWith(
-                                      colorScheme: const ColorScheme.light(
-                                          primary: blue)),
-                                  child: Center(
-                                    child: SizedBox(
-                                      width: 400,
-                                      height: 500,
-                                      child: child,
-                                    ),
-                                  )),
-                              initialTime: TimeOfDay.now(),
-                            );
-                            controller.onChangeEndTime(pickedTime);
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: grey),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Obx(() => Text(
-                                          controller.currentEndTime.value
-                                              .format(context),
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        )),
-                                    const SizedBox(width: 12),
-                                    const Icon(
-                                      Icons.access_time,
-                                      size: 16,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ))),
+                child: Row(children: [
+                  VerticalTitleValue(
+                      title: 'Waktu Mulai',
+                      value: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () async {
+                              var pickedTime = await showTimePicker(
+                                context: context,
+                                builder: (context, child) => Theme(
+                                    data: ThemeData.light().copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                            primary: blue)),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: 400,
+                                        height: 500,
+                                        child: child,
+                                      ),
+                                    )),
+                                initialTime: TimeOfDay.now(),
+                              );
+                              controller.onChangeStartTime(pickedTime);
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color: grey),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Obx(() => Text(
+                                            controller.currentStartTime.value
+                                                .format(context),
+                                            style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          )),
+                                      const SizedBox(width: 12),
+                                      const Icon(
+                                        Icons.access_time,
+                                        size: 16,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ))),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  VerticalTitleValue(
+                      title: 'Waktu Selesai',
+                      value: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () async {
+                              var pickedTime = await showTimePicker(
+                                context: context,
+                                builder: (context, child) => Theme(
+                                    data: ThemeData.light().copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                            primary: blue)),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: 400,
+                                        height: 500,
+                                        child: child,
+                                      ),
+                                    )),
+                                initialTime: TimeOfDay.now(),
+                              );
+                              controller.onChangeEndTime(pickedTime);
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(color: grey),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Obx(() => Text(
+                                            controller.currentEndTime.value
+                                                .format(context),
+                                            style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          )),
+                                      const SizedBox(width: 12),
+                                      const Icon(
+                                        Icons.access_time,
+                                        size: 16,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ))),
+                ]),
               ),
             ],
           ),

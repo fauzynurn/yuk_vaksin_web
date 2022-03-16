@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:yuk_vaksin_web/core/base_color.dart';
+import 'package:yuk_vaksin_web/features/auth/auth_page.dart';
 import 'package:yuk_vaksin_web/features/home/view/widgets/sidebar_item.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
@@ -28,7 +29,9 @@ class HomePage extends GetView<HomeController> {
         'Detail Artikel',
     routeName +
         VaccinePlacePage.routeName +
-        VaccineScheduleSessionDetailPage.routeName: 'Detail sesi'
+        VaccinePlaceDetailPage.routeName +
+        VaccineScheduleSessionDetailPage.routeName: 'Detail sesi',
+    AuthPage.routeName: ''
   };
 
   HomePage({Key? key}) : super(key: key);
@@ -142,41 +145,44 @@ class HomePage extends GetView<HomeController> {
         ),
       );
 
-  Widget topBar(String currentRouteName) => Container(
-      decoration:
-          BoxDecoration(color: Colors.white, border: Border.all(color: grey)),
-      child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title[currentRouteName]!,
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontSize: 18),
+  Widget topBar(String currentRouteName) {
+    debugPrint('JAJAJA: $currentRouteName');
+    return Container(
+        decoration:
+            BoxDecoration(color: Colors.white, border: Border.all(color: grey)),
+        child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title[currentRouteName]!,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 18),
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Obx(
-                    () => Text(
-                      controller.username.value,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Colors.black),
+                Row(
+                  children: [
+                    Obx(
+                      () => Text(
+                        controller.username.value,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.black),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  logoutButton()
-                ],
-              )
-            ],
-          )));
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    logoutButton()
+                  ],
+                )
+              ],
+            )));
+  }
 
   @override
   Widget build(BuildContext context) {

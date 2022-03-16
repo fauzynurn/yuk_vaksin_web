@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:yuk_vaksin_web/features/article/view/article_binding.dart';
-import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
 import 'package:yuk_vaksin_web/features/dashboard/view/dashboard_binding.dart';
 import 'package:yuk_vaksin_web/features/home/view/home_binding.dart';
 import 'package:yuk_vaksin_web/features/vaccine/view/vaccine_binding.dart';
@@ -14,7 +10,6 @@ import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_d
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
 import 'package:yuk_vaksin_web/main_binding.dart';
 
-import 'core/http_overrides.dart';
 import 'ensure_auth_middleware.dart';
 import 'features/article/detail/view/article_detail_binding.dart';
 import 'features/article/detail/view/article_detail_page.dart';
@@ -28,10 +23,10 @@ import 'features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_s
 import 'features/vaccineplace/view/vaccine_place_binding.dart';
 import 'features/vaccineplace/view/vaccine_place_page.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting();
-
+  MainBinding().dependencies();
   // HttpOverrides.global = MyHttpoverrides();
   // ByteData data =
   //     await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
@@ -50,7 +45,7 @@ class YukVaksinWeb extends StatelessWidget {
         initialRoute: AuthPage.routeName,
         // HomePage.routeName + DashboardPage.routeName,
         defaultTransition: Transition.noTransition,
-        initialBinding: MainBinding(),
+        // initialBinding: MainBinding(),
         getPages: [
           GetPage(
               name: AuthPage.routeName,
@@ -62,10 +57,10 @@ class YukVaksinWeb extends StatelessWidget {
             page: () => HomePage(),
             participatesInRootNavigator: true,
             bindings: [HomeBinding()],
-            // middlewares: [
-            //   //only enter this route when authed
-            //   EnsureAuthMiddleware(Get.find<AuthDatasource>()),
-            // ],
+            middlewares: [
+              //only enter this route when authed
+              EnsureAuthMiddleware(),
+            ],
             children: [
               GetPage(
                   preventDuplicates: true,
@@ -87,14 +82,19 @@ class YukVaksinWeb extends StatelessWidget {
                     GetPage(
                         name: VaccinePlaceDetailPage.routeName,
                         page: () => const VaccinePlaceDetailPage(),
-                        bindings: [VaccinePlaceDetailBinding()]),
-                    GetPage(
-                      preventDuplicates: true,
-                      name: VaccineScheduleSessionDetailPage.routeName,
-                      transition: Transition.noTransition,
-                      page: () => const VaccineScheduleSessionDetailPage(),
-                      bindings: [VaccineScheduleSessionDetailBinding()],
-                    )
+                        bindings: [
+                          VaccinePlaceDetailBinding()
+                        ],
+                        children: [
+                          GetPage(
+                            preventDuplicates: true,
+                            name: VaccineScheduleSessionDetailPage.routeName,
+                            transition: Transition.noTransition,
+                            page: () =>
+                                const VaccineScheduleSessionDetailPage(),
+                            bindings: [VaccineScheduleSessionDetailBinding()],
+                          )
+                        ]),
                   ],
                   bindings: [
                     VaccinePlaceBinding()

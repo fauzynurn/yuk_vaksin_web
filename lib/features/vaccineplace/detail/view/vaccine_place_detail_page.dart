@@ -190,7 +190,6 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
   }
 
   Widget informationSection(BuildContext context) => Container(
-        height: 400,
         decoration: BoxDecoration(
             border: Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
             color: Colors.white),
@@ -334,7 +333,6 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
       );
 
   Widget mapSection() => Container(
-      height: 400,
       decoration: BoxDecoration(
           border: Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
           color: Colors.white),
@@ -444,7 +442,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                             showAddEventScheduleSessionDialog(context),
                         style: ButtonStyle(
                             padding: MaterialStateProperty.all(
-                                const EdgeInsets.all(12)),
+                                const EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
                             backgroundColor: MaterialStateProperty.all(blue)),
                         icon: const Icon(
                           Icons.add,
@@ -501,14 +499,6 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       )),
-                      // DataColumn(
-                      //     label: Text(
-                      //   'Dosis ke-',
-                      //   style: GoogleFonts.poppins(
-                      //       color: blackGrey,
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w600),
-                      // )),
                       DataColumn(
                           label: Text(
                         'Nama Vaksin',
@@ -558,6 +548,9 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                                               fontSize: 14)),
                                     ),
                                   ),
+                                  const SizedBox(
+                                    width: 14,
+                                  ),
                                   IconButton(
                                     onPressed: () =>
                                         showEditEventScheduleSessionDialog(
@@ -571,14 +564,12 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                                     ),
                                   ),
                                   const SizedBox(
-                                    width: 16,
+                                    width: 2,
                                   ),
                                   IconButton(
                                     onPressed: () =>
                                         showDeleteEventSessionDialog(
                                             item, context),
-                                    // () =>
-                                    // showDeleteDialog(item, context),
                                     icon: const Icon(
                                       Icons.delete,
                                       size: 24,
@@ -594,13 +585,6 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                                     color: Colors.black,
                                     fontSize: 14),
                               )),
-                              // DataCell(Text(
-                              //   item.vaccineType.toString(),
-                              //   style: GoogleFonts.poppins(
-                              //       fontWeight: FontWeight.w500,
-                              //       color: Colors.black,
-                              //       fontSize: 14),
-                              // )),
                               DataCell(Text(
                                 item.vaccineName,
                                 style: GoogleFonts.poppins(
@@ -665,14 +649,16 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            Row(
-              children: [
-                Flexible(flex: 1, child: informationSection(context)),
-                const SizedBox(
-                  width: 12,
-                ),
-                Flexible(flex: 1, child: mapSection())
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Flexible(flex: 1, child: informationSection(context)),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Flexible(flex: 1, child: mapSection())
+                ],
+              ),
             ),
             const SizedBox(
               height: 12,

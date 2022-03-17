@@ -32,8 +32,8 @@ class VaccineScheduleSessionDetailPage
               ),
               content: ConstrainedBox(
                   constraints: const BoxConstraints(
-                    minWidth: 700,
-                    minHeight: 200,
+                    maxWidth: 600,
+                    maxHeight: 380,
                   ),
                   child: const UploadCertificateContent()),
               actions: <Widget>[
@@ -101,14 +101,6 @@ class VaccineScheduleSessionDetailPage
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       )),
-                      // DataColumn(
-                      //     label: Text(
-                      //   'Dosis ke-',
-                      //   style: GoogleFonts.poppins(
-                      //       color: blackGrey,
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w600),
-                      // )),
                     ],
                     rows: controller.userRegistrationList.value.data!
                         .map((item) => DataRow(cells: [
@@ -138,13 +130,6 @@ class VaccineScheduleSessionDetailPage
                                     color: Colors.black,
                                     fontSize: 14),
                               )),
-                              // DataCell(Text(
-                              //   item.vaccineType.toString(),
-                              //   style: GoogleFonts.poppins(
-                              //       fontWeight: FontWeight.w500,
-                              //       color: Colors.black,
-                              //       fontSize: 14),
-                              // )),
                               DataCell(Text(
                                 item.username,
                                 style: GoogleFonts.poppins(

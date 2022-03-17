@@ -17,7 +17,8 @@ class UploadCertificateContent extends GetView<UploadCertificateController> {
             child: GestureDetector(
               onTap: controller.onTapUploadPhoto,
               child: Container(
-                width: 300,
+                width: 600,
+                height: 400,
                 decoration: BoxDecoration(
                     border: Border.all(color: grey),
                     borderRadius: const BorderRadius.all(Radius.circular(12))),
@@ -64,8 +65,9 @@ class UploadCertificateContent extends GetView<UploadCertificateController> {
         children: [
           Image.network(
             controller.pickedImage.value!,
-            width: 180,
-            fit: BoxFit.fill,
+            width: 600,
+            height: 360,
+            fit: BoxFit.contain,
           ),
           Positioned(
             right: -10,

@@ -129,11 +129,11 @@ class HomePage extends GetView<HomeController> {
   Widget logoutButton() => TextButton(
         onPressed: controller.onTapLogoutButton,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           child: Text(
             'Keluar',
             style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                fontWeight: FontWeight.w600, fontSize: 14, color: Colors.white),
           ),
         ),
         style: ButtonStyle(

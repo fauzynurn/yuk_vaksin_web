@@ -140,6 +140,7 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
     Get.delete<AddVaccineEventScheduleSessionController>();
     if (result!) {
       await Future.delayed(const Duration(seconds: 1));
+      Get.back();
       controller.fetchSessionList();
       // Get.find<VaccinePlaceController>().onReceiveAddVaccinePlace();
     }
@@ -168,12 +169,9 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                   child: const Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Get.find<AddVaccinePlaceController>().onTapSubmitButton();
                     Navigator.pop(context, true);
-                    Get.rawSnackbar(
-                        title: 'Success',
-                        message: 'Tempat vaksin berhasil diubah');
                   },
                   child: const Text('OK'),
                 ),
@@ -181,8 +179,13 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
             ));
     Get.delete<AddVaccinePlaceController>();
     if (result!) {
-      Get.back();
+      Get.back(closeOverlays: true);
+
+      /// backend might need time to process the request
+      await Future.delayed(const Duration(seconds: 1));
       Get.find<VaccinePlaceController>().onReceiveAddVaccinePlace();
+      Get.rawSnackbar(
+          title: 'Success', message: 'Tempat vaksin berhasil diubah');
     }
   }
 

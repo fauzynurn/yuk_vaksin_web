@@ -18,7 +18,7 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-web
       - run: flutter pub get
-      - run: flutter build web --release --dart-define=GOOGLE_API_KEY=${{env.google_api_key}}
+      - run: flutter build web --release --base-href="/yuk-vaksin-web/" --dart-define=GOOGLE_API_KEY=${{env.google_api_key}}
       - run: |
           echo "COMMIT_SECRET: ${{ env.commit_secret }}"
           echo "GOOGLE_API_KEY: ${{ env.google_api_key }}"

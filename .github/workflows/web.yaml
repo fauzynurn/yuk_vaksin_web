@@ -4,14 +4,43 @@ on:
   push:
     branches: [ main ]
 
+
 jobs:
   build:
+    name: Build Web
+    env:
+      my_secret: ${{secrets.commit_secret}}
+      google_api_key: ${{secrets.google_api_key}}
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2 # Only works with v2
+      - uses: actions/checkout@v1
       - uses: subosito/flutter-action@v1
-      - uses: fauzynurn/yuk_vaksin_web@main
         with:
-          customArgs: --dart-define=GOOGLE_API_KEY=AIzaSyCvDjDzq302xyCRWAa-Y9z8Bs_yamM1Ex8
-          baseHref: /yuk_vaksin_web/
+          channel: 'stable'
+      - run: flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter build web --release --dart-define=GOOGLE_API_KEY=${{secrets.google_api_key}}
+      - run: |
+          cd build/web
+          git init
+          # type configurations: your user.email and user.name followed lines
+          git config --global user.email fnnoviansyah@gmail.com
+          git config --global user.name fauzynurn
+          git status
+          # change this remote url for examle your remote url is https://github.com/onatcipli/flutter_web.git then the following:
+          git remote add origin https://${{secrets.commit_secret}}@github.com/fauzynurn/yuk_vaksin_web.git
+          git checkout -b yuk-vaksin-web
+          git add --all
+          git commit -m "update"
+          git push origin yuk-vaksin-web -f
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2 # Only works with v2
+#      - uses: subosito/flutter-action@v1
+#      - uses: fauzynurn/yuk_vaksin_web@main
+#        with:
+#          customArgs: --dart-define=
+#          baseHref: /yuk_vaksin_web/

@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     name: Build Web
+    environment: yuk-vaksin-web-env
     env:
       commit_secret: ${{secrets.commit_secret}}
       google_api_key: ${{secrets.google_api_key}}

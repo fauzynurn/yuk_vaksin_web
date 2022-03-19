@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build Web
     env:
-      my_secret: ${{secrets.commit_secret}}
+      commit_secret: ${{secrets.commit_secret}}
       google_api_key: ${{secrets.google_api_key}}
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +19,7 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-web
       - run: flutter pub get
-      - run: flutter build web --release --dart-define=GOOGLE_API_KEY=${{secrets.google_api_key}}
+      - run: flutter build web --release --dart-define=GOOGLE_API_KEY=${{env.google_api_key}}
       - run: |
           cd build/web
           git init
@@ -28,7 +28,7 @@ jobs:
           git config --global user.name fauzynurn
           git status
           # change this remote url for examle your remote url is https://github.com/onatcipli/flutter_web.git then the following:
-          git remote add origin https://${{secrets.commit_secret}}@github.com/fauzynurn/yuk_vaksin_web.git
+          git remote add origin https://${{env.commit_secret}}@github.com/fauzynurn/yuk_vaksin_web.git
           git checkout -b yuk-vaksin-web
           git add --all
           git commit -m "update"

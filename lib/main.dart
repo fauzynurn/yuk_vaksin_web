@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'package:yuk_vaksin_web/features/article/view/article_binding.dart';
 import 'package:yuk_vaksin_web/features/dashboard/view/dashboard_binding.dart';
 import 'package:yuk_vaksin_web/features/home/view/home_binding.dart';
@@ -25,6 +26,7 @@ import 'features/vaccineplace/view/vaccine_place_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
   initializeDateFormatting();
   MainBinding().dependencies();
   // HttpOverrides.global = MyHttpoverrides();

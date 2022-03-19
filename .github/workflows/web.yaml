@@ -12,3 +12,6 @@ jobs:
       - uses: actions/checkout@v2 # Only works with v2
       - uses: subosito/flutter-action@v1
       - uses: fauzynurn/yuk_vaksin_web
+        with:
+          customArgs: --dart-define=GOOGLE_API_KEY=AIzaSyCvDjDzq302xyCRWAa-Y9z8Bs_yamM1Ex8
+          baseHref: /yuk_vaksin_web/

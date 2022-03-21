@@ -4,13 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:yuk_vaksin_web/core/base_color.dart';
 import 'package:yuk_vaksin_web/features/auth/auth_page.dart';
 import 'package:yuk_vaksin_web/features/home/view/widgets/sidebar_item.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
 
 import '../../article/detail/view/article_detail_page.dart';
 import '../../article/view/article_page.dart';
 import '../../dashboard/view/dashboard_page.dart';
 import '../../vaccine/view/vaccine_page.dart';
+import '../../vaccineplace/detail/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import '../../vaccineplace/view/vaccine_place_page.dart';
 import 'home_controller.dart';
 

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
+import 'package:yuk_vaksin_web/core/error.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/event_session.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
@@ -8,6 +8,8 @@ import '../../../../core/data_wrapper.dart';
 import '../../../home/view/home_page.dart';
 import '../../data/models/vaccine_place.dart';
 import '../../view/vaccine_place_page.dart';
+import '../vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_controller.dart';
+import '../vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 
 class VaccinePlaceDetailController extends GetxController {
   final VaccinePlaceDataSource _vaccinePlaceDataSource;
@@ -28,20 +30,37 @@ class VaccinePlaceDetailController extends GetxController {
 
   void onTapSessionItem(EventSession session) {
     Get.toNamed(
-        HomePage.routeName +
-            VaccinePlacePage.routeName +
-            VaccinePlaceDetailPage.routeName +
-            VaccineScheduleSessionDetailPage.routeName,
-        arguments: session.id);
+      HomePage.routeName +
+          VaccinePlacePage.routeName +
+          VaccinePlaceDetailPage.routeName +
+          VaccineScheduleSessionDetailPage.routeName,
+      arguments: VaccineScheduleSessionDetailPageParam(
+        eventId: param!.id,
+        eventScheduleId: session.id,
+      ),
+    );
   }
 
   void onTapDeleteSessionItem(EventSession session) async {
     try {
       await _vaccinePlaceDataSource.deleteEventSession(session.id);
-      Get.rawSnackbar(title: 'Success', message: 'Sesi berhasil dihapus');
+      Get.rawSnackbar(
+        title: 'Success',
+        message: 'Sesi berhasil dihapus',
+      );
       fetchSessionList();
     } catch (error) {
-      Get.rawSnackbar(title: 'Failed', message: 'Sesi gagal dihapus');
+      if (error is GeneralException) {
+        Get.rawSnackbar(
+          title: 'Failed',
+          message: error.message,
+        );
+      } else {
+        Get.rawSnackbar(
+          title: 'Failed',
+          message: 'Sesi gagal dihapus',
+        );
+      }
     }
   }
 

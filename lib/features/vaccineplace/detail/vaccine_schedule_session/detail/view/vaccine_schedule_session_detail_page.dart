@@ -1,20 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/data/models/user_vaccine_registration.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/upload_certificate_content.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/upload_certificate_controller.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_controller.dart';
 
 import '../../../../../../core/base_color.dart';
 import '../../../../../../core/data_wrapper.dart';
 import '../../../../../../widgets/loading_indicator.dart';
+import '../data/models/user_vaccine_registration.dart';
+import 'upload_certificate_content.dart';
+import 'upload_certificate_controller.dart';
+import 'vaccine_schedule_session_detail_controller.dart';
 
 class VaccineScheduleSessionDetailPage
     extends GetView<VaccineScheduleSessionDetailController> {
   static const routeName = '/event-session-detail';
 
   const VaccineScheduleSessionDetailPage({Key? key}) : super(key: key);
+
+  Widget orderCodeTextField() {
+    return Container(
+      width: 400,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(4))),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.search,
+              color: Colors.black.withOpacity(0.2),
+              size: 24,
+            ),
+            const SizedBox(
+              width: 12,
+            ),
+            Expanded(
+              child: TextField(
+                style: GoogleFonts.poppins(fontSize: 12),
+                textAlignVertical: TextAlignVertical.center,
+                controller: controller.orderCodeTextEditingController,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.only(bottom: 8),
+                  isDense: true,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  labelText: 'Cari berdasarkan kode order',
+                  labelStyle: TextStyle(
+                    fontSize: 12,
+                    color: grey,
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void showUploadCertificateDialog(
       UserVaccineRegistration vaccineRegistration, BuildContext context) async {
@@ -174,42 +220,72 @@ class VaccineScheduleSessionDetailPage
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Obx(
-                          () => IconButton(
-                              onPressed: controller.currentPage.value != 0
-                                  ? controller.onTapPreviousPage
-                                  : null,
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                size: 16,
-                                color: controller.currentPage.value != 0
-                                    ? Colors.black
-                                    : grey,
-                              )),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              orderCodeTextField(),
+                              const SizedBox(
+                                width: 18,
+                              ),
+                              TextButton(
+                                  onPressed: controller.onTapSearchButton,
+                                  style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 16)),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(blue)),
+                                  child: Text(
+                                    'Cari',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: Colors.white),
+                                  ))
+                            ],
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Obx(() => Text(
-                                'Page ${controller.currentPage.value + 1}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 12),
-                              )),
-                        ),
-                        Obx(
-                          () => IconButton(
-                              onPressed: controller.isLastPageReached.value
-                                  ? null
-                                  : controller.onTapNextPage,
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
-                                color: controller.isLastPageReached.value
-                                    ? grey
-                                    : Colors.black,
-                              )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Obx(
+                              () => IconButton(
+                                  onPressed: controller.currentPage.value != 0
+                                      ? controller.onTapPreviousPage
+                                      : null,
+                                  icon: Icon(
+                                    Icons.arrow_back_ios,
+                                    size: 16,
+                                    color: controller.currentPage.value != 0
+                                        ? Colors.black
+                                        : grey,
+                                  )),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Obx(() => Text(
+                                    'Page ${controller.currentPage.value + 1}',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 12),
+                                  )),
+                            ),
+                            Obx(
+                              () => IconButton(
+                                  onPressed: controller.isLastPageReached.value
+                                      ? null
+                                      : controller.onTapNextPage,
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                    color: controller.isLastPageReached.value
+                                        ? grey
+                                        : Colors.black,
+                                  )),
+                            ),
+                          ],
                         ),
                       ],
                     ),

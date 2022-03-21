@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:yuk_vaksin_web/features/vaccine/data/datasources/vaccine_datasource.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/view/add_vaccine_event_schedule_session_controller.dart';
 
 import '../../../auth/data/datasources/auth_datasource.dart';
 import '../../../vaccine/data/datasources/vaccine_datasource_impl.dart';
 import '../../data/datasources/vaccine_place_datasource.dart';
+import '../vaccine_schedule_session/view/add_vaccine_event_schedule_session_controller.dart';
 import 'vaccine_place_detail_controller.dart';
 
 class VaccinePlaceDetailBinding extends Binding {

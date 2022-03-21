@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/data/models/user_vaccine_registration.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/event_session.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/lat_long.dart';
@@ -11,6 +10,7 @@ import 'package:yuk_vaksin_web/features/vaccineplace/data/models/vaccine_place.d
 import '../../../../core/error.dart';
 import '../../../../core/key.dart';
 import '../../../auth/data/datasources/auth_datasource.dart';
+import '../../detail/vaccine_schedule_session/detail/data/models/user_vaccine_registration.dart';
 
 const googleBaseUrl = 'https://maps.googleapis.com/maps/api/';
 
@@ -150,7 +150,9 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
             'eventId': eventId,
           });
     } on DioError catch (error) {
-      throw GeneralException(error.toString());
+      throw GeneralException(
+        error.response?.data['errMsg'],
+      );
     } catch (error, stackTrace) {
       debugPrint('${error.toString()}\n${stackTrace.toString()}');
       throw GeneralException(stackTrace.toString());
@@ -245,7 +247,9 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
             'eventScheduleId': eventScheduleId,
           });
     } on DioError catch (error) {
-      throw GeneralException(error.toString());
+      throw GeneralException(
+        error.response?.data['errMsg'],
+      );
     } catch (error, stackTrace) {
       debugPrint('${error.toString()}\n${stackTrace.toString()}');
       throw GeneralException(stackTrace.toString());
@@ -287,7 +291,12 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
 
   @override
   Future<List<UserVaccineRegistration>> getUserVaccineRegistrationList(
-      int eventScheduleId, int offset, int limit, int orderNumber) async {
+    int eventScheduleId,
+    int eventId,
+    int offset,
+    int limit,
+    String orderNumber,
+  ) async {
     try {
       var response = await dio.get('admin/get-all-order',
           options: Options(
@@ -295,9 +304,10 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
           ),
           queryParameters: {
             'eventScheduleId': eventScheduleId,
+            'eventId': eventId,
             'offset': offset,
             'limit': limit,
-            'orderNo': ''
+            'orderNo': orderNumber,
           });
       return (response.data as List)
           .map((item) => UserVaccineRegistration.fromJson(item))

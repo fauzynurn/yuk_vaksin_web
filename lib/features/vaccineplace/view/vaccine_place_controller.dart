@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:yuk_vaksin_web/core/data_wrapper.dart';
+import 'package:yuk_vaksin_web/core/error.dart';
 import 'package:yuk_vaksin_web/features/home/view/home_page.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/detail/view/vaccine_place_detail_page.dart';
@@ -58,7 +59,16 @@ class VaccinePlaceController extends GetxController {
           title: 'Success', message: 'Tempat vaksin berhasil dihapus');
       fetchVaccinePlaceList();
     } catch (error) {
-      Get.rawSnackbar(title: 'Fail', message: 'Tempat vaksin gagal dihapus');
+      if (error is GeneralException) {
+        Get.rawSnackbar(
+            title: 'Failed',
+            message: error.message);
+      } else {
+        Get.rawSnackbar(
+          title: 'Fail',
+          message: 'Tempat vaksin gagal dihapus',
+        );
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-name: Gh-Pages
+name: Build YukVaksin! Web
 
 on:
   push:

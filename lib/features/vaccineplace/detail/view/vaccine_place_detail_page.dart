@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:yuk_vaksin_web/core/base_color.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/view/add_vaccine_event_schedule_session_content.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/view/add_vaccine_event_schedule_session_controller.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/models/event_session.dart';
 import 'package:yuk_vaksin_web/utils/date_util.dart';
 import 'package:yuk_vaksin_web/widgets/vertical_title_value.dart';
@@ -14,6 +12,8 @@ import '../../../../widgets/loading_indicator.dart';
 import '../../add/view/add_vaccine_place_content.dart';
 import '../../add/view/add_vaccine_place_controller.dart';
 import '../../view/vaccine_place_controller.dart';
+import '../vaccine_schedule_session/view/add_vaccine_event_schedule_session_content.dart';
+import '../vaccine_schedule_session/view/add_vaccine_event_schedule_session_controller.dart';
 import 'vaccine_place_detail_controller.dart';
 
 class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {

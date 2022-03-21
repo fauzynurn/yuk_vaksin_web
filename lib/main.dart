@@ -18,8 +18,8 @@ import 'features/auth/auth_binding.dart';
 import 'features/auth/auth_page.dart';
 import 'features/dashboard/view/dashboard_page.dart';
 import 'features/home/view/home_page.dart';
-import 'features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_binding.dart';
-import 'features/vaccineplace/add/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
+import 'features/vaccineplace/detail/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_binding.dart';
+import 'features/vaccineplace/detail/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_page.dart';
 import 'features/vaccineplace/view/vaccine_place_binding.dart';
 import 'features/vaccineplace/view/vaccine_place_page.dart';
 

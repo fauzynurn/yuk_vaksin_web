@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/data/models/user_vaccine_registration.dart';
 import 'package:yuk_vaksin_web/features/vaccineplace/data/datasources/vaccine_place_datasource.dart';
+
+import '../data/models/user_vaccine_registration.dart';
 
 class UploadCertificateController extends GetxController {
   late UserVaccineRegistration vaccineRegistration;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:yuk_vaksin_web/features/vaccineplace/add/vaccine_schedule_session/detail/view/upload_certificate_controller.dart';
+import 'package:yuk_vaksin_web/features/vaccineplace/detail/vaccine_schedule_session/detail/view/upload_certificate_controller.dart';
 
 import '../../../../../../core/base_color.dart';
 

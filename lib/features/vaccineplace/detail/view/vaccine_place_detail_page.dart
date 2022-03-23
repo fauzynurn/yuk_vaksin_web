@@ -400,14 +400,55 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 )
               ])));
 
-  Widget sessionSection(BuildContext context) => Container(
-      height: 1200,
-      decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
-          color: Colors.white),
-      child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
+  Widget paginationSection() {
+    return Row(
+      children: [
+        Obx(
+          () => IconButton(
+              onPressed: controller.currentPage.value != 0
+                  ? controller.onTapPreviousPage
+                  : null,
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 16,
+                color: controller.currentPage.value != 0 ? Colors.black : grey,
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Obx(() => Text(
+                'Page ${controller.currentPage.value + 1}',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.normal, fontSize: 12),
+              )),
+        ),
+        Obx(
+          () => IconButton(
+              onPressed: controller.isLastPageReached.value
+                  ? null
+                  : controller.onTapNextPage,
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: controller.isLastPageReached.value ? grey : Colors.black,
+              )),
+        ),
+      ],
+    );
+  }
+
+  Widget sessionSection(BuildContext context) => ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 629,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+              border:
+                  Border.all(color: const Color.fromRGBO(204, 201, 201, 1.0)),
+              color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -437,12 +478,17 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                         ],
                       ),
                     ),
+                    paginationSection(),
+                    const SizedBox(
+                      width: 12,
+                    ),
                     TextButton.icon(
                         onPressed: () =>
                             showAddEventScheduleSessionDialog(context),
                         style: ButtonStyle(
                             padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
+                                const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 16)),
                             backgroundColor: MaterialStateProperty.all(blue)),
                         icon: const Icon(
                           Icons.add,
@@ -461,8 +507,12 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                 const SizedBox(
                   height: 18,
                 ),
-                Expanded(child: sessionTable(context))
-              ])));
+                sessionTable(context)
+              ],
+            ),
+          ),
+        ),
+      );
 
   Widget sessionTable(BuildContext context) {
     switch (controller.sessionList.value.status) {

@@ -42,6 +42,7 @@ class VaccineScheduleSessionDetailController extends GetxController {
       orderCodeTextEditingController.text,
     )
         .then((value) {
+      isLastPageReached.value = value.length < pageSize;
       userRegistrationList.value = DataWrapper.success(
         value
             .where((element) => element.status != OrderStatus.cancelled)

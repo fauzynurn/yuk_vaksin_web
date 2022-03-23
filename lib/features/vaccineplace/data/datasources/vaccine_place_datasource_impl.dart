@@ -160,13 +160,23 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
   }
 
   @override
-  Future<List<EventSession>> getEventSessionList(int eventScheduleId) async {
+  Future<List<EventSession>> getEventSessionList(
+    int eventScheduleId,
+    int offset,
+    int limit,
+  ) async {
     try {
-      var response = await dio.get(
-        'admin/get-all-vaccine-schedule-session/$eventScheduleId',
-        options:
-            Options(headers: {'token': await authDatasource.getUserToken()}),
-      );
+      var response = await dio
+          .get('admin/get-all-vaccine-schedule-session/$eventScheduleId',
+              options: Options(
+                headers: {
+                  'token': await authDatasource.getUserToken(),
+                },
+              ),
+              queryParameters: {
+            'offset': offset,
+            'limit': limit,
+          });
       return (response.data as List)
           .map((item) => EventSession.fromJson(item))
           .toList();

@@ -53,6 +53,7 @@ class ArticleController extends GetxController {
     articleDatasource
         .getVaccineNewsList(currentPage.value * pageSize, pageSize)
         .then((value) {
+      isLastPageReached.value = value.length < pageSize;
       articleList.value = DataWrapper.success(value);
     }, onError: (error) {
       articleList.value = DataWrapper.error(error.toString());

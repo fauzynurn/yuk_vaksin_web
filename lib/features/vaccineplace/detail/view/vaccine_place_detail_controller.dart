@@ -17,15 +17,36 @@ class VaccinePlaceDetailController extends GetxController {
 
   late VaccinePlace? param;
 
+  static int pageSize = 10;
+
+  final currentPage = 0.obs;
+
+  final isLastPageReached = false.obs;
+
   VaccinePlaceDetailController(this._vaccinePlaceDataSource);
 
   void fetchSessionList() {
     sessionList.value = DataWrapper.loading();
-    _vaccinePlaceDataSource.getEventSessionList(param!.id).then((value) {
+    _vaccinePlaceDataSource
+        .getEventSessionList(
+      param!.id,
+      currentPage.value * pageSize,
+      pageSize,
+    )
+        .then((value) {
+      isLastPageReached.value = value.length < pageSize;
       sessionList.value = DataWrapper.success(value);
     }, onError: (error) {
       sessionList.value = DataWrapper.error(error.toString());
     });
+  }
+
+  void onTapPreviousPage() {
+    currentPage.value = currentPage.value - 1;
+  }
+
+  void onTapNextPage() {
+    currentPage.value = currentPage.value + 1;
   }
 
   void onTapSessionItem(EventSession session) {
@@ -69,6 +90,9 @@ class VaccinePlaceDetailController extends GetxController {
     super.onInit();
 
     param = Get.arguments;
+    ever(currentPage, (_) {
+      fetchSessionList();
+    });
   }
 
   @override

@@ -190,7 +190,7 @@ class VaccineScheduleSessionDetailPage
                       controller.userRegistrationList.value.data!.isEmpty
                   ? Container(
                       color: Colors.white,
-                      width: 643,
+                      width: 340,
                       height: 30,
                       child: Center(
                         child: Text('No data',

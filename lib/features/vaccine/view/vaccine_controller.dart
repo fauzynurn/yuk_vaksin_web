@@ -44,6 +44,7 @@ class VaccineController extends GetxController {
     vaccineDatasource
         .getVaccineList()
         .then((value) {
+      isLastPageReached.value = value.length < pageSize;
       vaccineList.value = DataWrapper.success(value);
     }, onError: (error) {
       vaccineList.value = DataWrapper.error(error.toString());

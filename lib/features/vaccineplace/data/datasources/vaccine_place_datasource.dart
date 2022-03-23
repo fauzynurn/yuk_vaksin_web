@@ -47,6 +47,8 @@ abstract class VaccinePlaceDataSource {
 
   Future<List<EventSession>> getEventSessionList(
     int eventScheduleId,
+    int offset,
+    int limit,
   );
 
   Future<void> updateVaccinePlace(

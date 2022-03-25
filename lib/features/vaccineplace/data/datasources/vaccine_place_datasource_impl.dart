@@ -46,13 +46,15 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
   @override
   Future<String> getCompleteAddress(double latitude, double longitude) async {
     try {
-      var response = await dio.fetch(RequestOptions(
-          baseUrl: googleBaseUrl,
-          path: 'geocode/json',
-          queryParameters: {
-            'latlng': '$latitude,$longitude',
-            'key': placesApiKey
-          }));
+      var response = await dio.get(
+        'googleapi/geocode',
+        options:
+            Options(headers: {'token': await authDatasource.getUserToken()}),
+        queryParameters: {
+          'lat': latitude,
+          'long': longitude,
+        },
+      );
       return response.data['results'][0]['formatted_address'];
     } catch (error) {
       throw GeneralException(error.toString());
@@ -62,10 +64,14 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
   @override
   Future<List<Location>> getPlaceList(String query) async {
     try {
-      var response = await dio.fetch(RequestOptions(
-          path: 'place/autocomplete/json',
-          baseUrl: googleBaseUrl,
-          queryParameters: {'input': query, 'key': placesApiKey}));
+      var response = await dio.get(
+        'googleapi/autocomplete',
+        options:
+            Options(headers: {'token': await authDatasource.getUserToken()}),
+        queryParameters: {
+          'input': query,
+        },
+      );
       return (response.data['predictions'] as List)
           .map((item) => Location.fromJson(item))
           .toList();
@@ -77,12 +83,16 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
   @override
   Future<LatLong> getLatLong(String placeId) async {
     try {
-      var response = await dio.fetch(RequestOptions(
-          baseUrl: googleBaseUrl,
-          queryParameters: {'place_id': placeId, 'key': placesApiKey},
-          path: 'geocode/json'));
+      var response = await dio.get(
+        'googleapi/place',
+        options:
+            Options(headers: {'token': await authDatasource.getUserToken()}),
+        queryParameters: {
+          'place_id': placeId,
+        },
+      );
       return LatLong.fromJson(
-          response.data['results'][0]['geometry']['location']);
+          response.data['result']['geometry']['location']);
     } catch (error) {
       throw GeneralException(error.toString());
     }

@@ -119,9 +119,9 @@ class AddVaccinePlaceController extends GetxController {
   }
 
   Future<List<Location>> fetchLocationList(String query) async {
-    var x = await _vaccinePlaceDataSource.getPlaceList(query);
-    debugPrint('LENGTHH: ${x.length}');
-    return x;
+    return await _vaccinePlaceDataSource.getPlaceList(
+      query.replaceAll(' ', '%20'),
+    );
   }
 
   @override

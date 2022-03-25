@@ -48,8 +48,10 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
     try {
       var response = await dio.get(
         'googleapi/geocode',
-        options:
-            Options(headers: {'token': await authDatasource.getUserToken()}),
+        options: Options(
+          headers: {'token': await authDatasource.getUserToken()},
+          contentType: Headers.jsonContentType,
+        ),
         queryParameters: {
           'lat': latitude,
           'long': longitude,
@@ -66,8 +68,10 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
     try {
       var response = await dio.get(
         'googleapi/autocomplete',
-        options:
-            Options(headers: {'token': await authDatasource.getUserToken()}),
+        options: Options(
+          headers: {'token': await authDatasource.getUserToken()},
+          contentType: Headers.jsonContentType,
+        ),
         queryParameters: {
           'input': query,
         },
@@ -85,14 +89,15 @@ class VaccinePlaceDataSourceImpl extends VaccinePlaceDataSource {
     try {
       var response = await dio.get(
         'googleapi/place',
-        options:
-            Options(headers: {'token': await authDatasource.getUserToken()}),
+        options: Options(
+          headers: {'token': await authDatasource.getUserToken()},
+          contentType: Headers.jsonContentType,
+        ),
         queryParameters: {
           'place_id': placeId,
         },
       );
-      return LatLong.fromJson(
-          response.data['result']['geometry']['location']);
+      return LatLong.fromJson(response.data['result']['geometry']['location']);
     } catch (error) {
       throw GeneralException(error.toString());
     }

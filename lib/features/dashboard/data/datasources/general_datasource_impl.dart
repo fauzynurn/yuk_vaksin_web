@@ -34,8 +34,11 @@ class GeneralDatasourceImpl extends GeneralDatasource {
   @override
   Future<VaccineStatistic> getVaccineStatistic() async {
     try {
-      var response = await dio.fetch(RequestOptions(
-          baseUrl: 'https://covid19.mathdro.id/api/countries/', path: 'ID'));
+      var response = await dio.get(
+        'statistic/covid',
+        options:
+            Options(headers: {'token': await authDatasource.getUserToken()}),
+      );
       return VaccineStatistic.fromJson(response.data);
     } on DioError catch (error) {
       throw GeneralException(error.toString());

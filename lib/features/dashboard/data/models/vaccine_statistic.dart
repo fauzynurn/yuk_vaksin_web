@@ -8,7 +8,8 @@ class VaccineStatistic {
 
   factory VaccineStatistic.fromJson(Map<String, dynamic> json) =>
       VaccineStatistic(
-          positive: json['confirmed']['value'],
-          recovered: json['recovered']['value'],
-          dead: json['deaths']['value']);
+        positive: json['update']['total']['jumlah_positif'],
+        recovered: json['update']['total']['jumlah_sembuh'],
+        dead: json['update']['total']['jumlah_meninggal'],
+      );
 }

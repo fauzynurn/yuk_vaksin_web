@@ -83,37 +83,6 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
         ),
       );
 
-  // void showVaccinePlaceDetailDialog(
-  //     BuildContext context, VaccinePlace vaccinePlace) {
-  //   showDialog(
-  //     builder: (context) => AlertDialog(
-  //       title: Text(
-  //         'Detail tempat vaksin',
-  //         style: GoogleFonts.poppins(
-  //             fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black),
-  //       ),
-  //       content: ConstrainedBox(
-  //         constraints: const BoxConstraints(
-  //           minWidth: 1000,
-  //           minHeight: 200,
-  //         ),
-  //         child: VaccinePlaceDetailContent(
-  //           vaccinePlace: vaccinePlace,
-  //         ),
-  //       ),
-  //       actions: <Widget>[
-  //         TextButton(
-  //           onPressed: () {
-  //             Navigator.pop(context, 'OK');
-  //           },
-  //           child: const Text('OK'),
-  //         ),
-  //       ],
-  //     ),
-  //     context: context,
-  //   );
-  // }
-
   void showAddVaccinePlaceDialog(BuildContext context) async {
     var result = await showDialog<String>(
         context: context,
@@ -220,43 +189,6 @@ class VaccinePlacePage extends GetView<VaccinePlaceController> {
               ),
             )),
       ));
-
-  // Widget searchBar() =>
-  // Container(
-  //       width: 100,
-  //       height: 50,
-  //       decoration: BoxDecoration(
-  //           border: Border.all(color: grey),
-  //           borderRadius: const BorderRadius.all(Radius.circular(8))),
-  //       child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), child: Row(
-  //         children: [
-  //           Icon(Icons.search, size: 16, color: Colors.black,),
-  //           const SizedBox(width: 8),
-  //         Expanded(
-  //           child: TextField(
-  //             // controller: controller.searchTextController,
-  //             // onChanged: (value) => controller.onChangeSearchTextField(value),
-  //             style: GoogleFonts.poppins(
-  //               fontSize: 14,
-  //               fontWeight: FontWeight.normal,
-  //               color: const Color.fromRGBO(117, 117, 117, 1.0),
-  //             ),
-  //             cursorColor: const Color.fromRGBO(117, 117, 117, 1.0),
-  //             decoration: InputDecoration(
-  //                 isDense: true,
-  //                 hintText: 'Search by employee name',
-  //                 hintStyle: GoogleFonts.poppins(
-  //                   fontWeight: FontWeight.normal,
-  //                   fontSize: 14,
-  //                   color: const Color.fromRGBO(117, 117, 117, 1.0),
-  //                 ),
-  //                 contentPadding: EdgeInsets.zero,
-  //                 border: InputBorder.none),
-  //           ),
-  //         ],
-  //       ),),
-  //     );
 
   void showDeleteDialog(VaccinePlace vaccinePlace, BuildContext context) async {
     var result = await showDialog<bool>(

@@ -64,6 +64,7 @@ class ResetPasswordPage extends GetView<ResetPasswordController> {
                     () => TextFormField(
                       controller: controller.passwordTextEditingController,
                       validator: controller.isPasswordTextFormValid,
+                      obscureText: controller.isPasswordHidden,
                       scrollPadding: const EdgeInsets.only(bottom: 100),
                       cursorColor: blue,
                       decoration: InputDecoration(
@@ -105,6 +106,7 @@ class ResetPasswordPage extends GetView<ResetPasswordController> {
                       controller:
                           controller.passwordConfirmationTextEditingController,
                       validator: controller.isPasswordConfirmationTextFormValid,
+                      obscureText: controller.isPasswordConfirmationHidden,
                       scrollPadding: const EdgeInsets.only(bottom: 100),
                       cursorColor: blue,
                       decoration: InputDecoration(

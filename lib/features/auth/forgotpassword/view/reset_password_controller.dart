@@ -92,7 +92,7 @@ class ResetPasswordController extends GetxController {
           title: 'Password berhasil diatur ulang',
           message: 'Silakan masuk menggunakan password baru anda',
         );
-        Get.offNamed(
+        Get.offAllNamed(
           AuthPage.routeName,
         );
         isLoading.value = false;

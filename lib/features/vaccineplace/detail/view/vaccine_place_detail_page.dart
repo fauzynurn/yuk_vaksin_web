@@ -551,12 +551,28 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                       )),
                       DataColumn(
                           label: Text(
+                        'Dosis ke-',
+                        style: GoogleFonts.poppins(
+                            color: blackGrey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      )),
+                      DataColumn(
+                          label: Text(
                         'Nama Vaksin',
                         style: GoogleFonts.poppins(
                             color: blackGrey,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       )),
+                      DataColumn(
+                          label: Text(
+                            'Kuota',
+                            style: GoogleFonts.poppins(
+                                color: blackGrey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          )),
                       DataColumn(
                           label: Text(
                         'Sisa kuota',
@@ -636,12 +652,26 @@ class VaccinePlaceDetailPage extends GetView<VaccinePlaceDetailController> {
                                     fontSize: 14),
                               )),
                               DataCell(Text(
+                                item.vaccineType.toString(),
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontSize: 14),
+                              )),
+                              DataCell(Text(
                                 item.vaccineName,
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                     fontSize: 14),
                               )),
+                      DataCell(Text(
+                        item.quota.toString(),
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontSize: 14),
+                      )),
                               DataCell(Text(
                                 item.remainingQuota.toString(),
                                 style: GoogleFonts.poppins(

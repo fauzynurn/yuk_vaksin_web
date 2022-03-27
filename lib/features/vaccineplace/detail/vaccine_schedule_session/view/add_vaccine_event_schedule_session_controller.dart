@@ -62,8 +62,10 @@ class AddVaccineEventScheduleSessionController extends GetxController {
     }
   }
 
-  void onChangeSelectedVaccine(int index) {
-    selectedVaccine.value = vaccineList.value.data![index];
+  void onChangeSelectedVaccine(int id) {
+    selectedVaccine.value = vaccineList.value.data!.firstWhere(
+      (element) => element.id == id,
+    );
   }
 
   void onTapSubmitButton() async {

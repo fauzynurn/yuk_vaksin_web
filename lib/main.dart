@@ -16,6 +16,12 @@ import 'features/article/detail/view/article_detail_page.dart';
 import 'features/article/view/article_page.dart';
 import 'features/auth/auth_binding.dart';
 import 'features/auth/auth_page.dart';
+import 'features/auth/forgotpassword/validation/code/view/code_validation_binding.dart';
+import 'features/auth/forgotpassword/validation/code/view/code_validation_page.dart';
+import 'features/auth/forgotpassword/validation/email/view/email_validation_binding.dart';
+import 'features/auth/forgotpassword/validation/email/view/email_validation_page.dart';
+import 'features/auth/forgotpassword/view/reset_password_binding.dart';
+import 'features/auth/forgotpassword/view/reset_password_page.dart';
 import 'features/dashboard/view/dashboard_page.dart';
 import 'features/home/view/home_page.dart';
 import 'features/vaccineplace/detail/vaccine_schedule_session/detail/view/vaccine_schedule_session_detail_binding.dart';
@@ -113,7 +119,28 @@ class YukVaksinWeb extends StatelessWidget {
                 ],
               ),
             ],
-          )
+          ),
+          GetPage(
+            preventDuplicates: true,
+            name: EmailValidationPage.routeName,
+            transition: Transition.noTransition,
+            page: () => const EmailValidationPage(),
+            bindings: [EmailValidationBinding()],
+          ),
+          GetPage(
+            preventDuplicates: true,
+            name: CodeValidationPage.routeName,
+            transition: Transition.noTransition,
+            page: () => const CodeValidationPage(),
+            bindings: [CodeValidationBinding()],
+          ),
+          GetPage(
+            preventDuplicates: true,
+            name: ResetPasswordPage.routeName,
+            transition: Transition.noTransition,
+            page: () => const ResetPasswordPage(),
+            bindings: [ResetPasswordBinding()],
+          ),
         ]);
   }
 }

@@ -10,4 +10,8 @@ abstract class AuthDatasource {
   void setUserName(String value);
 
   void setUserToken(String value);
+
+  Future<void> verifyEmail(String email);
+
+  Future<void> resetPassword(String token, String newPassword);
 }

@@ -61,4 +61,36 @@ class AuthDatasourceImpl extends AuthDatasource {
   void setUserToken(String value) {
     pref.setString(tokenKey, value);
   }
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {
+    try {
+      await dio.post('admin/reset-password',
+          options: Options(
+            headers: {'token': token},
+          ),
+          data: {
+            'password': newPassword,
+          });
+    } on DioError catch (error, stackTrace) {
+      debugPrint(stackTrace.toString());
+      throw GeneralException(error.response?.data['errMsg']);
+    }
+  }
+
+  @override
+  Future<void> verifyEmail(String email) async {
+    try {
+      await dio.post('admin/forgot',
+          options: Options(
+            headers: {'token': await getUserToken()},
+          ),
+          data: {
+            'email': email,
+          });
+    } on DioError catch (error, stackTrace) {
+      debugPrint(stackTrace.toString());
+      throw GeneralException(error.response?.data['errMsg']);
+    }
+  }
 }

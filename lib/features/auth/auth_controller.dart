@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yuk_vaksin_web/features/auth/data/datasources/auth_datasource.dart';
+import 'package:yuk_vaksin_web/features/auth/forgotpassword/view/reset_password_page.dart';
 import 'package:yuk_vaksin_web/features/dashboard/view/dashboard_page.dart';
 
 import '../../core/error.dart';
 import '../home/view/home_page.dart';
+import 'forgotpassword/validation/email/view/email_validation_page.dart';
 
 enum AuthMode { login, register }
 
@@ -67,6 +69,12 @@ class AuthController extends GetxController {
     } else {
       return 'Password tidak boleh kosong';
     }
+  }
+
+  void onTapResetPassword() {
+    Get.toNamed(
+      EmailValidationPage.routeName,
+    );
   }
 
   void onTapRegisterNowButton() {

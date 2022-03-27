@@ -137,14 +137,13 @@ class LoginSection extends GetView<AuthController> {
         child: Form(
           key: controller.loginFormGlobalKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               emailTextField(),
               const SizedBox(height: 18),
               passwordTextField(),
-              // const SizedBox(
-              //   height: 12,
-              // ),
+              const SizedBox(
+                height: 12,
+              ),
               // Text.rich(
               //   TextSpan(
               //       text: 'Belum memiliki akun? ',
@@ -164,10 +163,31 @@ class LoginSection extends GetView<AuthController> {
               //         )
               //       ]),
               // ),
+              loginButton(),
               const SizedBox(
                 height: 18,
               ),
-              loginButton()
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Lupa password?',
+                      style: GoogleFonts.poppins(color: Colors.black)),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: controller.onTapResetPassword,
+                      child: Text(
+                        'Atur ulang password',
+                        style: GoogleFonts.poppins(
+                          color: blue,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
